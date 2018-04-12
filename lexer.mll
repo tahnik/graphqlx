@@ -27,19 +27,24 @@ let newline = '\r' | '\n' | "\r\n"
 let name = ['_' 'a'-'z' 'A'-'Z' ] ['_' 'a'-'z' 'A'-'Z' '0'-'9' ]*
 
 (* part 4 *)
+(*
+ * Do not move name from the last position.
+ * Moving that will cause name to catch everything
+ *)
 rule read =
   parse
   | white    { read lexbuf }
   | newline  { next_line lexbuf; read lexbuf }
   | int      { INT (int_of_string (Lexing.lexeme lexbuf)) }
   | float    { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
-  | name     { NAME (Lexing.lexeme lexbuf) }
   | "true"   { TRUE }
   | "false"  { FALSE }
   | "null"   { NULL }
   | "query"  { QUERY }
-  | "mutation"  { MUTATION }
+  | "mutation" { MUTATION }
+  | "on"     { ON }
   | '"'      { read_string (Buffer.create 17) lexbuf }
+  | '$'      { DOLLAR }
   | '{'      { LEFT_BRACE }
   | '}'      { RIGHT_BRACE }
   | '('      { LEFT_PAREN }
@@ -48,8 +53,9 @@ rule read =
   | ']'      { RIGHT_BRACK }
   | ':'      { COLON }
   | ','      { read lexbuf }
-  | eof      { EOF }
   | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
+  | eof      { EOF }
+  | name     { NAME (Lexing.lexeme lexbuf) }
 
 (* part 5 *)
 and read_string buf =

@@ -23,6 +23,7 @@
 
 %token QUERY
 %token MUTATION
+%token ON
 
 %{
   open Graphql
@@ -44,6 +45,7 @@ read_document:
 
 read_definitions:
   | { [] }
+  (* Short hand queries *)
   | definitions = read_definitions
     selection_set = read_selection_set EOF
     {
@@ -55,14 +57,15 @@ read_definitions:
         selection_set=selection_set;
       }::definitions
     }
+  (* Operation Definition *)
   | definitions = read_definitions
-    optype=read_optype name = NAME
+    optype = read_optype name = NAME
     variable_definitions = read_variable_definitions
     directives = read_directives
     selection_set = read_selection_set
     {
       Operation {
-        optype=Query;
+        optype=optype;
         name=None;
         variable_definitions=variable_definitions;
         directives=directives;
@@ -82,11 +85,12 @@ read_definitions:
     }
   ;
 
+
 read_optype:
-  | value = QUERY
-    { value }
-  | value = MUTATION
-    { value }
+  | QUERY
+    { Query }
+  | MUTATION
+    { Mutation }
 
 read_selection_set:
   | { [] }
@@ -110,25 +114,33 @@ read_selection:
         selection_set=selection_set;
       }::selections
     }
-  ;
+  (* Fragment Spread *)
+  | selections = read_selection
+    SPREAD fname = NAME directives = read_directives
+    {
+      FragmentSpread {
+        name=fname; directives=directives
+      }::selections
+    }
+
+read_type_condition:
+  ON named_type = NAME
+  { named_type }
 
 read_alias:
   | { None }
   | read_alias name = NAME COLON
     { Some name }
-  ;
 
 read_arguments:
   | { [] }
   | arguments = read_arguments
     LEFT_PAREN argument = read_argument RIGHT_PAREN
     { argument::arguments }
-  ;
 
 read_argument:
   | name = NAME COLON value = read_value
     { (name, value) }
-  ;
 
 read_value:
   | value = read_variable
@@ -151,7 +163,6 @@ read_value:
     { `List value }
   | LEFT_BRACE value = read_object RIGHT_BRACE
     { `Assoc value }
-  ;
 
 read_const_value:
   | value = STRING
@@ -172,31 +183,26 @@ read_const_value:
     { `List value }
   | LEFT_BRACE value = read_const_object RIGHT_BRACE
     { `Assoc value }
-  ;
 
 read_list:
   | { [] }
   | listVal = read_list value = read_value 
     { value::listVal }
-  ;
 
 read_const_list:
   | { [] }
   | listVal = read_const_list value = read_const_value 
     { value::listVal }
-  ;
 
 read_object:
   | { [] }
   | fields = read_object key = STRING COLON value = read_value
     { (key, value)::fields }
-  ;
     
 read_const_object:
   | { [] }
   | fields = read_const_object key = STRING COLON value = read_const_value
     { (key, value)::fields }
-  ;
 
 read_directives:
   | { [] }
@@ -204,14 +210,12 @@ read_directives:
     {
       { name=name; arguments=arguments }::directives
     }
-  ;
 
 read_variable_definitions:
   | { [] }
   | definitions = read_variable_definitions
     LEFT_PAREN definition = read_variable_definition RIGHT_PAREN
     { definition::definitions }
-  ;
 
 read_variable_definition:
   | name = read_variable COLON
@@ -220,12 +224,10 @@ read_variable_definition:
     {
       { name=name; typ=typ; default_value=default_value }
     }
-  ;
 
 read_variable:
   | DOLLAR value = NAME
     { value }
-  ;
 
 read_type:
   | value = NAME
@@ -234,4 +236,3 @@ read_type:
     { ListType value }
   | value = read_type BANG
     { NonNullType value }
-  ;
