@@ -21,6 +21,9 @@
 %token POUND
 %token <string> NAME
 
+%token QUERY
+%token MUTATION
+
 %{
   open Graphql
 %}
@@ -42,7 +45,7 @@ read_document:
 read_definitions:
   | { [] }
   | definitions = read_definitions
-    LEFT_BRACE selection_set = read_selections RIGHT_BRACE EOF
+    selection_set = read_selection_set EOF
     {
       Operation {
         optype=Query;
@@ -53,8 +56,22 @@ read_definitions:
       }::definitions
     }
   | definitions = read_definitions
+    optype=read_optype name = NAME
+    variable_definitions = read_variable_definitions
+    directives = read_directives
+    selection_set = read_selection_set
+    {
+      Operation {
+        optype=Query;
+        name=None;
+        variable_definitions=variable_definitions;
+        directives=directives;
+        selection_set=selection_set;
+      }::definitions
+    }
+  | definitions = read_definitions
     STRING name = STRING STRING type_condition = NAME
-    LEFT_BRACE selection_set = read_selections RIGHT_BRACE
+    LEFT_BRACE selection_set = read_selection_set RIGHT_BRACE
     {
       Fragment {
         name=name;
@@ -65,20 +82,32 @@ read_definitions:
     }
   ;
 
-read_selections:
+read_optype:
+  | value = QUERY
+    { value }
+  | value = MUTATION
+    { value }
+
+read_selection_set:
+  | { [] }
+  | read_selection_set LEFT_BRACE selections = read_selection RIGHT_BRACE
+    { selections }
+
+read_selection:
   | { [] }
   (* Field *)
-  | selections = read_selections
+  | selections = read_selection
     alias = read_alias
     name = NAME
-    /* arguments = read_arguments */
-    /* directives = read_directives */
+    arguments = read_arguments
+    directives = read_directives
+    selection_set = read_selection_set
     {
       Field {
         alias=None; name=name;
-        arguments=[];
-        directives=[];
-        selection_set=[];
+        arguments=arguments;
+        directives=directives;
+        selection_set=selection_set;
       }::selections
     }
   ;
@@ -92,16 +121,18 @@ read_alias:
 read_arguments:
   | { [] }
   | arguments = read_arguments
-    RIGHT_PAREN argument = read_argument LEFT_PAREN
+    LEFT_PAREN argument = read_argument RIGHT_PAREN
     { argument::arguments }
   ;
 
 read_argument:
-  | name = STRING COLON value = read_value
+  | name = NAME COLON value = read_value
     { (name, value) }
   ;
 
 read_value:
+  | value = read_variable
+    { `Variable value }
   | value = STRING
     { `String value }
   | value = INT
@@ -120,16 +151,52 @@ read_value:
     { `List value }
   | LEFT_BRACE value = read_object RIGHT_BRACE
     { `Assoc value }
+  ;
+
+read_const_value:
+  | value = STRING
+    { `String value }
+  | value = INT
+    { `Int value }
+  | value = FLOAT
+    { `Float value }
+  | value = TRUE
+    { `Bool true }
+  | value = FALSE
+    { `Bool false }
+  | value = NULL
+    { `Null }
+  | value = NAME
+    { `Enum value }
+  | LEFT_BRACK value = read_const_list RIGHT_BRACK
+    { `List value }
+  | LEFT_BRACE value = read_const_object RIGHT_BRACE
+    { `Assoc value }
+  ;
 
 read_list:
   | { [] }
   | listVal = read_list value = read_value 
     { value::listVal }
+  ;
+
+read_const_list:
+  | { [] }
+  | listVal = read_const_list value = read_const_value 
+    { value::listVal }
+  ;
 
 read_object:
   | { [] }
   | fields = read_object key = STRING COLON value = read_value
     { (key, value)::fields }
+  ;
+    
+read_const_object:
+  | { [] }
+  | fields = read_const_object key = STRING COLON value = read_const_value
+    { (key, value)::fields }
+  ;
 
 read_directives:
   | { [] }
@@ -137,3 +204,34 @@ read_directives:
     {
       { name=name; arguments=arguments }::directives
     }
+  ;
+
+read_variable_definitions:
+  | { [] }
+  | definitions = read_variable_definitions
+    LEFT_PAREN definition = read_variable_definition RIGHT_PAREN
+    { definition::definitions }
+  ;
+
+read_variable_definition:
+  | name = read_variable COLON
+    typ = read_type
+    default_value = option(read_const_value)
+    {
+      { name=name; typ=typ; default_value=default_value }
+    }
+  ;
+
+read_variable:
+  | DOLLAR value = NAME
+    { value }
+  ;
+
+read_type:
+  | value = NAME
+    { NamedType value }
+  | LEFT_BRACK value = read_type RIGHT_BRACK
+    { ListType value }
+  | value = read_type BANG
+    { NonNullType value }
+  ;

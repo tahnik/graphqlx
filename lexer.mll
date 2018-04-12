@@ -37,6 +37,8 @@ rule read =
   | "true"   { TRUE }
   | "false"  { FALSE }
   | "null"   { NULL }
+  | "query"  { QUERY }
+  | "mutation"  { MUTATION }
   | '"'      { read_string (Buffer.create 17) lexbuf }
   | '{'      { LEFT_BRACE }
   | '}'      { RIGHT_BRACE }
