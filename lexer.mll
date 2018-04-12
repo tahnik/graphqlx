@@ -35,6 +35,7 @@ rule read =
   parse
   | white    { read lexbuf }
   | newline  { next_line lexbuf; read lexbuf }
+  | "..."    { SPREAD }
   | int      { INT (int_of_string (Lexing.lexeme lexbuf)) }
   | float    { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
   | "true"   { TRUE }

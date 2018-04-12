@@ -1,7 +1,16 @@
-query getZuckProfile($devicePicSize: Int) {
+query withFragments {
   user(id: 4) {
-    id
-    name
-    profilePic(size: $devicePicSize)
+    friends(first: 10) {
+      ...friendFields
+    }
+    mutualFriends(first: 10) {
+      ...friendFields
+    }
   }
+}
+
+fragment friendFields on User {
+  id
+  name
+  profilePic(size: 50)
 }

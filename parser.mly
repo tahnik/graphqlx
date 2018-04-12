@@ -122,6 +122,7 @@ read_selection:
         name=fname; directives=directives
       }::selections
     }
+  (* inline fragment *)
 
 read_type_condition:
   ON named_type = NAME
