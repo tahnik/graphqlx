@@ -40,10 +40,12 @@ rule read =
   | '"'      { read_string (Buffer.create 17) lexbuf }
   | '{'      { LEFT_BRACE }
   | '}'      { RIGHT_BRACE }
+  | '('      { LEFT_PAREN }
+  | ')'      { RIGHT_PAREN }
   | '['      { LEFT_BRACK }
   | ']'      { RIGHT_BRACK }
   | ':'      { COLON }
-  | ','      { COMMA }
+  | ','      { read lexbuf }
   | eof      { EOF }
   | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
 
