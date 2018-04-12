@@ -18,6 +18,12 @@
 %token AT
 %token BAR
 %token POUND
+%token <string> NAME
+
+%{
+  open Graphql
+%}
+
 
 %start <Graphql.document option> prog
 %%
@@ -28,34 +34,36 @@ prog:
   ;
 
 value:
-  | LEFT_BRACE obj = obj_fields RIGHT_BRACE EOF
-    { `Assoc obj }
+  | defs = read_defs EOF
+    { defs }
   ;
 
-nestedval:
-  | LEFT_BRACE obj = obj_fields RIGHT_BRACE
-    { `Assoc obj }
-  | LEFT_BRACK vl = list_fields RIGHT_BRACK
-    { `List vl }
-  | s = STRING
-    { `String s }
-  | i = INT
-    { `Int i }
-  | x = FLOAT
-    { `Float x }
-  | TRUE
-    { `Bool true }
-  | FALSE
-    { `Bool false }
-  | NULL
-    { `Null }
+read_defs:
+  def = read_def defs = read_defs { def::defs }
+
+read_def:
+  | LEFT_BRACE selection_set = read_selections RIGHT_BRACE
+    {
+      Operation {
+        optype=Query;
+        name=None;
+        variable_definitions=[];
+        directives=[];
+        selection_set=selection_set;
+      }
+    }
+  | STRING name = STRING STRING type_condition = NAME
+    LEFT_BRACE selection_set = read_selections RIGHT_BRACE
+    {
+      Fragment {
+        name=name;
+        type_condition=type_condition;
+        directives=[];
+        selection_set=selection_set;
+      }
+    }
   ;
 
-obj_fields:
-  obj = separated_list(COMMA, obj_field)  { obj } ;
-
-obj_field:
-  k = STRING COLON v = nestedval          { (k, v) } ;
-
-list_fields:
-  vl = separated_list(COMMA, nestedval)       { vl } ;
+read_selections:
+  {[]}
+  ;
