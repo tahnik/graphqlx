@@ -86,3 +86,43 @@ type definition =
 
 type document =
   definition list
+
+
+(* part 1 *)
+open Core.Std
+let rec output_value outc =
+  List.iter ~f:(fun def ->
+    read_definition def
+  ) outc
+
+and read_definition def = match def with
+  | Operation op ->
+    printf "Operation\n";
+    read_operation op
+
+and read_operation op = match op with
+  | {
+      optype;
+      name;
+      variable_definitions;
+      directives;
+      selection_set;
+    } ->
+    (match optype with
+    | Query -> printf "Query\n";
+    | Mutation -> printf "Mutation\n";
+    | Subscription -> printf "Subscription\n");
+    (match name with
+    | None -> printf "Shorthand Query\n"
+    | Some value -> printf "%s\n" value);
+    (* read_var_defs variable_definitions;
+
+and read_var_defs defs =
+  List.iter ~f:(fun def ->
+    read_var_def def
+  ) outc
+
+and read_var_def def = match def with
+  | {
+
+    } *)
