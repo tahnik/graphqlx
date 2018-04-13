@@ -125,6 +125,17 @@ read_selection:
       }::selections
     }
   (* inline fragment *)
+  | selections = read_selection
+    SPREAD type_condition = option(read_type_condition)
+    directives = read_directives
+    selection_set = read_selection_set
+    {
+      InlineFragment {
+        type_condition = type_condition;
+        directives = directives;
+        selection_set = selection_set
+      }::selections
+    }
 
 read_type_condition:
   ON named_type = read_name
