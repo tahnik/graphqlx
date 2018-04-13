@@ -1,6 +1,6 @@
-open Core.Std
-open Lexer
 open Lexing
+open Printf
+open Pervasives
 
 let print_position outx lexbuf =
   let pos = lexbuf.lex_curr_p in
@@ -9,24 +9,20 @@ let print_position outx lexbuf =
 
 let parse_with_error lexbuf =
   try Parser.prog Lexer.read lexbuf with
-  | SyntaxError msg ->
+  | Lexer.SyntaxError msg ->
     fprintf stderr "%a: %s\n" print_position lexbuf msg;
     None
   | Parser.Error ->
     fprintf stderr "%a: syntax error\n" print_position lexbuf;
     exit (-1)
 
-(* part 1 *)
 let rec parse_and_print lexbuf =
   match parse_with_error lexbuf with
   | Some value ->
-    
     parse_and_print lexbuf
   | None -> ()
 
-let test (pretty: bool) (filename: string) =
-  let inx = In_channel.create filename in
-  let lexbuf = Lexing.from_channel inx in
-  lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = filename };
-  parse_and_print pretty lexbuf;
-  In_channel.close inx;;
+let parse (graphql: string) =
+  let lexbuf = Lexing.from_string graphql in
+  lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = graphql };
+  parse_and_print lexbuf;;

@@ -1,0 +1,6 @@
+{
+  "name" : "graphql-parser",
+  "sources" : [
+    "build/coj"
+  ]
+}

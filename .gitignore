@@ -1,3 +1,7 @@
 _build
 *.native
 build
+node_modules
+.merlin
+lib/js
+lib/bs
