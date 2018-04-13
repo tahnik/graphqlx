@@ -67,7 +67,7 @@ read_definitions:
     {
       Operation {
         optype=optype;
-        name=name;
+        name=Some name;
         variable_definitions=variable_definitions;
         directives=directives;
         selection_set=selection_set;
