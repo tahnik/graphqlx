@@ -17,23 +17,32 @@ let parse_with_error lexbuf =
     exit (-1)
 
 (* part 1 *)
-let rec parse_and_print lexbuf =
+let rec parse_and_print pretty lexbuf =
   match parse_with_error lexbuf with
   | Some value ->
-    Prettify.print (List.rev value);
-    parse_and_print lexbuf
+    if pretty = true then Prettify.print (List.rev value);
+    parse_and_print pretty lexbuf
   | None -> ()
 
-let loop filename () =
+let print_file filename =
+  let rins = match (String.rindex filename) '/' with
+    | None -> 0
+    | Some value -> value + 1
+  in
+  let rind = match (String.rindex filename) '.' with
+    | None -> 0
+    | Some value -> value
+  in
+  let name = String.sub filename rins (rind - rins) in
+  printf "Testing %s: " (String.capitalize name);;
+
+let test (pretty: bool) (filename: string) =
+  print_file filename; 
   let inx = In_channel.create filename in
   let lexbuf = Lexing.from_channel inx in
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = filename };
-  parse_and_print lexbuf;
-  In_channel.close inx
+  parse_and_print pretty lexbuf;
+  printf "OK\n";
+  In_channel.close inx;;
 
-(* part 2 *)
-let () =
-  Command.basic ~summary:"Parse and display JSON"
-    Command.Spec.(empty +> anon ("filename" %: file))
-    loop 
-  |> Command.run
+test false "test/parser/assets/fragment.graphql"

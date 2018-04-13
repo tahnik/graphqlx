@@ -1,4 +1,4 @@
-.PHONY: test
+.PHONY: test_parser
 
-test:
-	ocamlbuild -Is src/parser,test/parser,test/prettify -use-menhir -tag thread -use-ocamlfind -quiet -pkg core fragment.native
+test_parser:
+	ocamlbuild -Is src/parser,test/parser,lib/prettify -use-menhir -tag thread -use-ocamlfind -quiet -pkg core parser_.native
