@@ -99,6 +99,8 @@ and read_definition def = match def with
   | Operation op ->
     printf "Operation\n";
     read_operation op
+  | Fragment fr ->
+    printf "Fragment\n";
 
 and read_operation op = match op with
   | {

@@ -1,4 +1,4 @@
-query withFragments {
+query withFriends {
   user(id: 4) {
     friends(first: 10) {
       ...friendFields

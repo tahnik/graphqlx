@@ -43,6 +43,7 @@ rule read =
   | "null"   { NULL }
   | "query"  { QUERY }
   | "mutation" { MUTATION }
+  | "fragment" { FRAGMENT }
   | "on"     { ON }
   | '"'      { read_string (Buffer.create 17) lexbuf }
   | '$'      { DOLLAR }

@@ -23,6 +23,7 @@
 
 %token QUERY
 %token MUTATION
+%token FRAGMENT
 %token ON
 
 %{
@@ -73,13 +74,14 @@ read_definitions:
       }::definitions
     }
   | definitions = read_definitions
-    STRING name = STRING STRING type_condition = NAME
-    LEFT_BRACE selection_set = read_selection_set RIGHT_BRACE
+    FRAGMENT name = NAME type_condition = read_type_condition
+    directives = read_directives
+    selection_set = read_selection_set
     {
       Fragment {
         name=name;
         type_condition=type_condition;
-        directives=[];
+        directives=directives;
         selection_set=selection_set;
       }::definitions
     }
