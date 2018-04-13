@@ -48,14 +48,14 @@ read_definitions:
   | { [] }
   (* Short hand queries *)
   | definitions = read_definitions
-    selection_set = read_selection_set EOF
+    LEFT_BRACE selections = read_selection RIGHT_BRACE
     {
       Operation {
         optype=Query;
         name=None;
         variable_definitions=[];
         directives=[];
-        selection_set=selection_set;
+        selection_set=selections;
       }::definitions
     }
   (* Operation Definition *)

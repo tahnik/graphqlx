@@ -52,18 +52,3 @@ let read_files =
     List.iter ~f: (fun name ->
       test true name 
     ) (List.rev (Dir.dir_contents "test/parser/assets"));
-
-
-
-(* test true "test/parser/assets/arguments.graphql";
-test true "test/parser/assets/field.graphql";
-test true "test/parser/assets/mutation.graphql";
-test true "test/parser/assets/mutation.graphql";
-test true "test/parser/assets/mutation.graphql";
-test true "test/parser/assets/mutation.graphql";
-test true "test/parser/assets/mutation.graphql";
-test true "test/parser/assets/mutation.graphql";
-test true "test/parser/assets/mutation.graphql";
-test true "test/parser/assets/mutation.graphql";
-test true "test/parser/assets/mutation.graphql";
-test true "test/parser/assets/mutation.graphql"; *)
