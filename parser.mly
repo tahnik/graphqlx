@@ -24,7 +24,7 @@
 %token QUERY
 %token MUTATION
 %token FRAGMENT
-%token ON
+%token <string> ON
 
 %{
   open Graphql
@@ -60,7 +60,7 @@ read_definitions:
     }
   (* Operation Definition *)
   | definitions = read_definitions
-    optype = read_optype name = NAME
+    optype = read_optype name = read_name
     variable_definitions = read_variable_definitions
     directives = read_directives
     selection_set = read_selection_set
@@ -74,7 +74,7 @@ read_definitions:
       }::definitions
     }
   | definitions = read_definitions
-    FRAGMENT name = NAME type_condition = read_type_condition
+    FRAGMENT name = read_fragment_name type_condition = read_type_condition
     directives = read_directives
     selection_set = read_selection_set
     {
@@ -104,7 +104,7 @@ read_selection:
   (* Field *)
   | selections = read_selection
     alias = read_alias
-    name = NAME
+    name = read_name
     arguments = read_arguments
     directives = read_directives
     selection_set = read_selection_set
@@ -118,7 +118,7 @@ read_selection:
     }
   (* Fragment Spread *)
   | selections = read_selection
-    SPREAD fname = NAME directives = read_directives
+    SPREAD fname = read_fragment_name directives = read_directives
     {
       FragmentSpread {
         name=fname; directives=directives
@@ -127,12 +127,12 @@ read_selection:
   (* inline fragment *)
 
 read_type_condition:
-  ON named_type = NAME
+  ON named_type = read_name
   { named_type }
 
 read_alias:
   | { None }
-  | read_alias name = NAME COLON
+  | read_alias name = read_name COLON
     { Some name }
 
 read_arguments:
@@ -142,7 +142,7 @@ read_arguments:
     { argument::arguments }
 
 read_argument:
-  | name = NAME COLON value = read_value
+  | name = read_name COLON value = read_value
     { (name, value) }
 
 read_value:
@@ -160,7 +160,7 @@ read_value:
     { `Bool false }
   | value = NULL
     { `Null }
-  | value = NAME
+  | value = read_name
     { `Enum value }
   | LEFT_BRACK value = read_list RIGHT_BRACK
     { `List value }
@@ -180,7 +180,7 @@ read_const_value:
     { `Bool false }
   | value = NULL
     { `Null }
-  | value = NAME
+  | value = read_name
     { `Enum value }
   | LEFT_BRACK value = read_const_list RIGHT_BRACK
     { `List value }
@@ -209,7 +209,7 @@ read_const_object:
 
 read_directives:
   | { [] }
-  | directives = read_directives AT name = NAME arguments = read_arguments
+  | directives = read_directives AT name = read_name arguments = read_arguments
     {
       { name=name; arguments=arguments }::directives
     }
@@ -229,13 +229,23 @@ read_variable_definition:
     }
 
 read_variable:
-  | DOLLAR value = NAME
+  | DOLLAR value = read_name
     { value }
 
 read_type:
-  | value = NAME
+  | value = read_name
     { NamedType value }
   | LEFT_BRACK value = read_type RIGHT_BRACK
     { ListType value }
   | value = read_type BANG
     { NonNullType value }
+
+read_fragment_name:
+  | value = NAME
+    { value }
+
+read_name:
+  | value = ON
+    { value }
+  | value = NAME
+    { value }

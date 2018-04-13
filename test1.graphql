@@ -1,4 +1,4 @@
-query withFriends {
+query on {
   user(id: 4) {
     friends(first: 10) {
       ...friendFields
