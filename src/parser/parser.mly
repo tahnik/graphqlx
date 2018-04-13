@@ -60,14 +60,14 @@ read_definitions:
     }
   (* Operation Definition *)
   | definitions = read_definitions
-    optype = read_optype name = read_name
+    optype = read_optype name = option(read_name)
     variable_definitions = read_variable_definitions
     directives = read_directives
     selection_set = read_selection_set
     {
       Operation {
         optype=optype;
-        name=Some name;
+        name=name;
         variable_definitions=variable_definitions;
         directives=directives;
         selection_set=selection_set;

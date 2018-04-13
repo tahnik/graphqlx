@@ -45,4 +45,25 @@ let test (pretty: bool) (filename: string) =
   printf "OK\n";
   In_channel.close inx;;
 
-test false "test/parser/assets/fragment.graphql"
+let read_files = 
+  if Dir.dir_is_empty "test/parser/assets" then
+    printf "No Files Found"
+  else
+    List.iter ~f: (fun name ->
+      test true name 
+    ) (List.rev (Dir.dir_contents "test/parser/assets"));
+
+
+
+(* test true "test/parser/assets/arguments.graphql";
+test true "test/parser/assets/field.graphql";
+test true "test/parser/assets/mutation.graphql";
+test true "test/parser/assets/mutation.graphql";
+test true "test/parser/assets/mutation.graphql";
+test true "test/parser/assets/mutation.graphql";
+test true "test/parser/assets/mutation.graphql";
+test true "test/parser/assets/mutation.graphql";
+test true "test/parser/assets/mutation.graphql";
+test true "test/parser/assets/mutation.graphql";
+test true "test/parser/assets/mutation.graphql";
+test true "test/parser/assets/mutation.graphql"; *)
