@@ -91,7 +91,8 @@ and read_frag_spread spread =
       read_directives directives;
 
 and read_inline_frag frag =
-  printf "Inline Fragment";
+  printf "Inline Fragment\n";
+  print_spaces !spaces;
   match frag with
     | {
         type_condition;
@@ -116,7 +117,7 @@ and read_field field =
     (match alias with
       | None -> printf ""
       | Some alias -> printf "Alias: %s\n" alias);
-    printf "Field Name: %s\n" name;
+    printf "Name: %s\n" name;
     read_arguments arguments;
     read_selection_set selection_set;
 
@@ -127,7 +128,8 @@ and read_directives directives =
         name;
         arguments
       } ->
-      printf "Name: %s" name;
+      printf "Name: %s\n" name;
+      print_spaces (!spaces - (!spaces - 2));
       read_arguments arguments;
   ) directives
 
@@ -163,10 +165,15 @@ and read_value value =
     | `Assoc ls -> read_assoc ls
 
 and read_list ls =
-  printf "List\n";
+  let length = List.length ls in
+  printf "[";
+  let i: int ref = ref 0 in
   List.iter ~f:(fun value ->
-    read_value value
-  ) ls
+    read_value value;
+    i := !i + 1;
+    if !i < length then printf ", " else printf ""
+  ) ls;
+  printf "]";
 
 and read_assoc ls =
   printf "Object\n";

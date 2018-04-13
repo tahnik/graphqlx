@@ -148,13 +148,14 @@ read_alias:
 
 read_arguments:
   | { [] }
-  | arguments = read_arguments
-    LEFT_PAREN argument = read_argument RIGHT_PAREN
-    { argument::arguments }
+  | LEFT_PAREN arguments = read_argument RIGHT_PAREN
+    { arguments }
 
 read_argument:
-  | name = read_name COLON value = read_value
-    { (name, value) }
+  | { [] }
+  | arguments = read_argument
+    name = read_name COLON value = read_value
+    { (name, value)::arguments }
 
 read_value:
   | value = read_variable

@@ -1,5 +1,5 @@
 {
-  user(id: 4) {
+  user(id: 4, name: 5) {
     id
     name
     profilePic(width: 100, height: 50)

@@ -47,6 +47,7 @@ rule read =
   | "on"     { ON "on" }
   | '"'      { read_string (Buffer.create 17) lexbuf }
   | '$'      { DOLLAR }
+  | '@'      { AT }
   | '{'      { LEFT_BRACE }
   | '}'      { RIGHT_BRACE }
   | '('      { LEFT_PAREN }
