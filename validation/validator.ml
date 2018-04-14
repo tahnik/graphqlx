@@ -24,7 +24,7 @@ let rec parse_and_print lexbuf =
     parse_and_print lexbuf
   | None -> ()
 
-let test (pretty: bool) (filename: string) =
+let validate (filename: string) =
   let inx = In_channel.create filename in
   let lexbuf = Lexing.from_channel inx in
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = filename };
