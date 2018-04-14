@@ -9,14 +9,14 @@
   "scripts": {
     "clean:language": "rm -rf build/coj",
     "create:language": "mkdir -p build/coj",
-    "build:parser": "npm run create:language && menhir --base build/coj/parser language/src/parser.mly",
-    "build:lexer": "npm run create:language && ocamllex -o build/coj/lexer.ml language/src/lexer.mll",
-    "copy:language": "cp language/src/parse.ml build/coj && cp language/src/graphql.ml build/coj && cp lib/ocaml/prettify/prettify.ml build/coj",
+    "build:parser": "npm run create:language && menhir --base build/coj/parser src/language/src/parser.mly",
+    "build:lexer": "npm run create:language && ocamllex -o build/coj/lexer.ml src/language/src/lexer.mll",
+    "copy:language": "cp src/language/src/parse.ml build/coj && cp src/language/src/graphql.ml build/coj && cp lib/ocaml/prettify/prettify.ml build/coj",
     "post:language": "mv lib/js/build/coj/* lib/js && rm -rf lib/bs && rm -rf lib/js/build",
     "build:language": "npm run clean:language && npm run build:parser && npm run build:lexer && npm run copy:language && bsb -make-world && npm run post:language",
     "clean:validation": "rm -rf build/coj",
     "create:validation": "mkdir -p build/coj",
-    "copy:validation": "cp validation/src/* build/coj",
+    "copy:validation": "cp src/validation/src/* build/coj",
     "build:validation": "npm run clean:validation && npm run create:validation && npm run build:parser && npm run build:lexer && npm run copy:language && npm run copy:validation && bsb -make-world && npm run post:validation",
     "post:validation": "mv lib/js/build/coj/* lib/js && rm -rf lib/bs && rm -rf lib/js/build",
     "create:dir": "mkdir -p build/coj",
@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/tahnik/graphql-ocaml#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "bs-platform": "^2.2.2"
   },
   "devDependencies": {

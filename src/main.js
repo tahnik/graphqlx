@@ -1,5 +1,9 @@
-let parse = require("../lib/js/parse").parse;
-let validate = require("../lib/js/validate").validate;
+import { parse } from "../lib/js/parse";
+import { validate } from "../lib/js/validate";
+import { POST } from "./http/src/http";
 
-exports.parse = parse;
-exports.validate = validate;
+const fetch = (endpoint, query, header) => {
+  validate(query);
+  POST(endpoint, query, header);
+};
+

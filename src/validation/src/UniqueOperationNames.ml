@@ -8,15 +8,16 @@ let rec validate definitions =
   (match definitions with
     | [] -> ()
     | def::defs -> read_definition def; validate defs);
-  if !error then exit(-1);
+  if (!error) == true then exit(-1);
 
 
 and read_definition def =
 match def with
   | Operation op ->
-    (if !numberOfShorthands > 0 then
+    if !numberOfShorthands > 0 then
+      error := true;
+    if !numberOfShorthands > 0 then
       printf "\nvalidation error: A GraphQL query can only have one shorthand query\n";
-      error := true);
     read_operation op
   | Fragment fr ->
     read_fragment fr
