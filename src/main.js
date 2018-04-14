@@ -7,3 +7,4 @@ const fetch = (endpoint, query, header) => {
   POST(endpoint, query, header);
 };
 
+export { fetch, parse, validate };
