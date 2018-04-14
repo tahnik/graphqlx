@@ -73,10 +73,10 @@ and read_selection_set selection_set =
   | selection::sel_sets ->
     print_spaces !spaces;
     spaces := !spaces + 2;
-    match selection with
+    (match selection with
       | Field field -> read_field field
       | FragmentSpread spread -> read_frag_spread spread 
-      | InlineFragment frag -> read_inline_frag frag;
+      | InlineFragment frag -> read_inline_frag frag);
     spaces := !spaces - 2;
     read_selection_set sel_sets;
 
@@ -197,7 +197,8 @@ and read_assoc ls i =
   if length == 1 then printf " }";
 
 and read_var_defs defs =
-  print_spaces !spaces;
+  let length = List.length defs in
+  if length > 0 then print_spaces !spaces;
   match defs with
   | [] -> ()
   | de::des ->
