@@ -1,14 +1,22 @@
 open Graphql
+open Printf
+
+let numberOfShorthands: int ref = ref 0;;
+let error: bool ref = ref false;;
 
 let rec validate definitions =
   (match definitions with
     | [] -> ()
     | def::defs -> read_definition def; validate defs);
+  if !error then exit(-1);
 
 
 and read_definition def =
 match def with
   | Operation op ->
+    (if !numberOfShorthands > 0 then
+      printf "\nvalidation error: A GraphQL query can only have one shorthand query\n";
+      error := true);
     read_operation op
   | Fragment fr ->
     read_fragment fr
@@ -38,7 +46,7 @@ match op with
       | Mutation -> ()
       | Subscription -> ());
     (match name with
-      | None -> ()
+      | None -> numberOfShorthands := !numberOfShorthands + 1;
       | Some value -> ());
     read_var_defs variable_definitions;
     read_directives directives;
