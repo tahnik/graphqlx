@@ -26,3 +26,6 @@ let parse (graphql: string) =
   let lexbuf = Lexing.from_string graphql in
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = graphql };
   parse_and_print lexbuf;;
+
+let parse_from_buf buf =
+  parse_and_print buf;;

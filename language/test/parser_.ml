@@ -24,6 +24,9 @@ let test (filename: string) =
   let strL = read_file filename in
   let str = String.concat "" strL in
   Parse.parse str;
+  (* let lexbuf = Lexing.from_string str in
+  lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = str };
+  Parse.parse_from_buf lexbuf; *)
   printf "OK\n";;
 
 let read_files = 
@@ -31,5 +34,5 @@ let read_files =
     printf "No Files Found"
   else
     List.iter (fun name ->
-      test true name 
+      test name 
     ) (List.rev (Dir.dir_contents "language/test/assets"));
