@@ -20,6 +20,7 @@
     "build:validation": "npm run clean:validation && npm run create:validation && npm run build:parser && npm run build:lexer && npm run copy:language && npm run copy:validation && bsb -make-world && npm run post:validation",
     "post:validation": "mv lib/js/build/coj/* lib/js && rm -rf lib/bs && rm -rf lib/js/build",
     "create:dir": "mkdir -p build/coj",
+    "dist": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -34,5 +35,9 @@
   "homepage": "https://github.com/tahnik/graphql-ocaml#readme",
   "dependencies": {
     "bs-platform": "^2.2.2"
+  },
+  "devDependencies": {
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14"
   }
 }
