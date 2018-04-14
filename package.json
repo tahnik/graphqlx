@@ -1,6 +1,6 @@
 {
   "name": "graphqlx",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A GraphQL client written in OCaml and JavaScript",
   "keywords": [
     "OCaml",
@@ -33,7 +33,7 @@
     "test:js": "npm run test:js:build && node dist/test/github.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "license" : "MIT",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tahnik/graphqlx.git"
