@@ -17,18 +17,20 @@ let parse_with_error lexbuf =
     exit (-1)
 
 let rec parse_and_print lexbuf =
-  let returnVal: Graphql.document ref = ref [] in
+  let ast: Graphql.document ref = ref [] in
   (match parse_with_error lexbuf with
   | Some value ->
-    returnVal := value;
+    ast := value;
     ignore(parse_and_print lexbuf);
   | None -> ());
-  !returnVal;;
+  !ast;;
 
 let parse (graphql: string) =
   let lexbuf = Lexing.from_string graphql in
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = graphql };
-  parse_and_print lexbuf;;
+  let ast = parse_and_print lexbuf in
+  Prettify.print ast;
+  ast;;
 
 let parse_from_buf buf =
   parse_and_print buf;;
