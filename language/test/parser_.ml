@@ -8,7 +8,6 @@ let print_file filename =
   let name = String.sub filename (rins + 1) (rind - rins) in
   printf "Testing %s: " (String.capitalize name);;
 
-
 let read_file filename = 
   let lines = ref [] in
   let chan = open_in filename in
@@ -20,7 +19,7 @@ let read_file filename =
     close_in chan;
     List.rev !lines ;;
 
-let test (pretty: bool) (filename: string) =
+let test (filename: string) =
   print_file filename;
   let strL = read_file filename in
   let str = String.concat "" strL in
