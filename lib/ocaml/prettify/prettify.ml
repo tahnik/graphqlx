@@ -1,7 +1,5 @@
 open Graphql
-
-(* part 1 *)
-open Core.Std
+open Printf
 
 let spaces : int ref = ref 0;;
 
@@ -11,6 +9,7 @@ let print_spaces amount =
   done
 
 let rec print definitions =
+  spaces := 0;
   (match definitions with
     | [] -> printf "\n"
     | def::defs -> read_definition def; print defs);
@@ -69,15 +68,17 @@ match op with
     spaces := !spaces - 4;
 
 and read_selection_set selection_set =
-  List.iter ~f:(fun selection ->
+  match selection_set with
+  | [] -> ()
+  | selection::sel_sets ->
     print_spaces !spaces;
     spaces := !spaces + 2;
-    (match selection with
+    match selection with
       | Field field -> read_field field
       | FragmentSpread spread -> read_frag_spread spread 
-      | InlineFragment frag -> read_inline_frag frag);
+      | InlineFragment frag -> read_inline_frag frag;
     spaces := !spaces - 2;
-  ) selection_set
+    read_selection_set sel_sets;
 
 and read_frag_spread spread = 
   printf "Fragment Spread\n";
@@ -118,35 +119,39 @@ and read_field field =
       | None -> printf ""
       | Some alias -> printf "Alias: %s\n" alias);
     printf "Name: %s\n" name;
-    read_arguments arguments;
+    read_arguments arguments 0;
     read_selection_set selection_set;
 
-and read_directives directives = 
-  List.iter ~f:(fun directive ->
-    match directive with
+and read_directives directives =
+  match directives with
+  | [] -> ()
+  | direc::direcs ->
+    match direc with
     | {
         name;
         arguments
       } ->
       printf "Name: %s\n" name;
       print_spaces (!spaces - (!spaces - 2));
-      read_arguments arguments;
-  ) directives
+      read_arguments arguments 0;
+    read_directives direcs;
 
-and read_arguments arguments =
-let length = List.length arguments in
-if length > 0 then
-  print_spaces !spaces;
-if length > 0 then
-  printf "Arguments: (";
-let i: int ref = ref 0 in
-List.iter ~f:(fun (key, value) ->
-  printf "%s: " key;
-  read_value value;
-  i := !i + 1;
-  if !i < length then printf ", " else printf ""
-) arguments;
-if length > 0 then printf ")\n";
+and read_arguments arguments i =
+  let length = List.length arguments in
+  if length > 0 then
+    print_spaces !spaces;
+  if length > 0 then
+    if i < 1 then printf "Arguments: (";
+  match arguments with
+  | [] -> ()
+  | arg::args ->
+    match arg with
+    | (key, value) ->
+      printf "%s: " key;
+      read_value value;
+      if i < length - 1 then printf ", " else printf "";
+    read_arguments args (i + 1);
+  if length > 0 then printf ")\n";
 
 
 and read_value value =
@@ -161,31 +166,42 @@ and read_value value =
         | true -> printf "true"
         | false -> printf "false")
     | `Enum en -> printf "%s" en
-    | `List ls -> read_list ls
-    | `Assoc ls -> read_assoc ls
+    | `List ls -> read_list ls 0
+    | `Assoc ls -> read_assoc ls 0
 
-and read_list ls =
+and read_list ls i =
   let length = List.length ls in
-  printf "[";
-  let i: int ref = ref 0 in
-  List.iter ~f:(fun value ->
-    read_value value;
-    i := !i + 1;
-    if !i < length then printf ", " else printf ""
-  ) ls;
-  printf "]";
+  if i < 1 then printf "[";
+  match ls with
+    | [] -> ()
+    | value::lss ->
+      read_value value;
+      if i < length - 1 then printf ", " else printf "";
+    read_list lss (i + 1);
+  if i == length then printf "]";
+  if length == 1 then printf "]";
 
-and read_assoc ls =
-  printf "Object\n";
-  List.iter ~f:(fun (key, value) ->
-    printf "%s: " key;
-    read_value value;
-  ) ls
+and read_assoc ls i =
+  let length = List.length ls in
+  if i < 1 then printf "{ ";
+  (match ls with
+    | [] -> ()
+    | obj::lss ->
+      match obj with
+      | (key, value) ->
+        printf "%s : " key;
+        read_value value;
+        if i < length - 1 then printf ", " else printf "";
+    read_assoc lss (i + 1));
+  if i == length then printf " }";
+  if length == 1 then printf " }";
 
 and read_var_defs defs =
-  List.iter ~f:(fun def ->
   print_spaces !spaces;
-  match def with
+  match defs with
+  | [] -> ()
+  | de::des ->
+    match de with
     | {
         name;
         typ;
@@ -193,7 +209,7 @@ and read_var_defs defs =
       } ->
       printf "Name: %s\n" name;
       read_type typ;
-  ) defs
+    read_var_defs des;
 
 and read_type typ =
   match typ with
