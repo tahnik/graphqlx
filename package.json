@@ -8,7 +8,7 @@
     "GraphQL",
     "JavaScript"
   ],
-  "main": "dist/graphql.js",
+  "main": "dist/graphqlx.js",
   "directories": {
     "lib": "lib",
     "src": "src",
