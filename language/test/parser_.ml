@@ -5,7 +5,7 @@ open Printf
 let print_file filename =
   let rins = String.rindex filename '/' in
   let rind = String.rindex filename '.' in
-  let name = String.sub filename (rins + 1) (rind - rins) in
+  let name = String.sub filename (rins + 1) (rind - (rins + 1)) in
   printf "Testing %s: " (String.capitalize name);;
 
 let read_file filename = 
