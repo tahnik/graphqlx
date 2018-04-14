@@ -25,11 +25,11 @@ let rec parse_and_print lexbuf =
   | None -> ());
   !ast;;
 
-let parse (graphql: string) =
+let parse (graphql: string) (pretty_print: bool) =
   let lexbuf = Lexing.from_string graphql in
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = graphql };
   let ast = parse_and_print lexbuf in
-  Prettify.print ast;
+  if pretty_print then Prettify.print ast;
   ast;;
 
 let parse_from_buf buf =

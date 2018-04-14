@@ -7,4 +7,4 @@ parser.parse(`{
     smallPic: profilePic(size: 64)
     bigPic: profilePic(size: 1024)
   }
-}`);
+}`, true);

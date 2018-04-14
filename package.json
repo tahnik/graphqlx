@@ -11,7 +11,7 @@
     "create:dir": "mkdir -p build/coj",
     "build:parser": "npm run create:dir && menhir --base build/coj/parser language/src/parser.mly",
     "build:lexer": "npm run create:dir && ocamllex -o build/coj/lexer.ml language/src/lexer.mll",
-    "copy:language": "cp language/src/parse.ml build/coj && cp language/src/graphql.ml build/coj",
+    "copy:language": "cp language/src/parse.ml build/coj && cp language/src/graphql.ml build/coj && cp lib/ocaml/prettify/prettify.ml build/coj",
     "post:language": "mv lib/js/build/coj/* lib/js && rm -rf lib/bs && rm -rf lib/js/build",
     "build:language": "npm run clean:language && npm run build:parser && npm run build:lexer && npm run copy:language && bsb -make-world && npm run post:language",
     "test": "echo \"Error: no test specified\" && exit 1"

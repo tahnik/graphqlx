@@ -6,7 +6,7 @@ let print_file filename =
   let rins = String.rindex filename '/' in
   let rind = String.rindex filename '.' in
   let name = String.sub filename (rins + 1) (rind - (rins + 1)) in
-  printf "Testing %s: " (String.capitalize name);;
+  printf "Testing %s: \n" (String.capitalize name);;
 
 let read_file filename = 
   let lines = ref [] in
@@ -23,7 +23,7 @@ let test (filename: string) =
   print_file filename;
   let strL = read_file filename in
   let str = String.concat "" strL in
-  Parse.parse str;
+  Parse.parse str true;
   (* let lexbuf = Lexing.from_string str in
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = str };
   Parse.parse_from_buf lexbuf; *)
