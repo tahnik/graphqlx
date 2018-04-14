@@ -211,7 +211,7 @@ read_const_list:
 
 read_object:
   | { [] }
-  | fields = read_object key = STRING COLON value = read_value
+  | fields = read_object key = NAME COLON value = read_value
     { (key, value)::fields }
     
 read_const_object:
