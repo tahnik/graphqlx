@@ -1,10 +1,10 @@
-let parser = require("../lib/js/parse");
+let Validate = require("../lib/js/validate");
 
-parser.parse(`{
+Validate.validate(`{
   user(id: 4) {
     id
     name
     smallPic: profilePic(size: 64)
     bigPic: profilePic(size: 1024)
   }
-}`, true);
+}`);
