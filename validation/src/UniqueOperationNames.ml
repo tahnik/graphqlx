@@ -1,5 +1,4 @@
 open Graphql
-open Printf
 
 let rec validate definitions =
   (match definitions with
@@ -37,21 +36,23 @@ match op with
     (match optype with
       | Query -> ()
       | Mutation -> ()
-      | Subscription -> () );
+      | Subscription -> ());
     (match name with
       | None -> ()
-      | Some value -> () );
+      | Some value -> ());
     read_var_defs variable_definitions;
     read_directives directives;
     read_selection_set selection_set;
 
 and read_selection_set selection_set =
-  List.iter (fun selection ->
+  match selection_set with
+  | [] -> ()
+  | selection::sel_sets ->
     (match selection with
       | Field field -> read_field field
       | FragmentSpread spread -> read_frag_spread spread 
       | InlineFragment frag -> read_inline_frag frag);
-  ) selection_set
+    read_selection_set sel_sets;
 
 and read_frag_spread spread = 
   match spread with
@@ -74,19 +75,6 @@ and read_inline_frag frag =
       read_directives directives;
       read_selection_set selection_set;
 
-and read_directives directives = 
-  (match directives with
-    | [] -> ()
-    | direc::direcs ->
-      (match direc with
-      | {
-          name;
-          arguments
-        } ->
-        read_arguments arguments);
-      read_directives direcs;
-  );
-
 and read_field field =
   match field with
   | {
@@ -99,14 +87,30 @@ and read_field field =
     (match alias with
       | None -> ()
       | Some alias -> ());
-    read_arguments arguments;
+    read_arguments arguments 0;
     read_selection_set selection_set;
 
-and read_arguments arguments =
-let length = List.length arguments in
-List.iter (fun (key, value) ->
-  read_value value;
-) arguments;
+and read_directives directives =
+  match directives with
+  | [] -> ()
+  | direc::direcs ->
+    match direc with
+    | {
+        name;
+        arguments
+      } ->
+      read_arguments arguments 0;
+    read_directives direcs;
+
+and read_arguments arguments i =
+  let length = List.length arguments in
+  match arguments with
+  | [] -> ()
+  | arg::args ->
+    match arg with
+    | (key, value) ->
+      read_value value;
+    read_arguments args (i + 1);
 
 
 and read_value value =
@@ -121,32 +125,43 @@ and read_value value =
         | true -> ()
         | false -> ())
     | `Enum en -> ()
-    | `List ls -> ()
-    | `Assoc ls -> ()
+    | `List ls -> read_list ls 0
+    | `Assoc ls -> read_assoc ls 0
 
-and read_list ls =
-  List.iter (fun value ->
-    read_value value;
-  ) ls;
+and read_list ls i =
+  let length = List.length ls in
+  match ls with
+    | [] -> ()
+    | value::lss ->
+      read_value value;
+    read_list lss (i + 1);
 
-and read_assoc ls =
-  List.iter (fun (key, value) ->
-    read_value value;
-  ) ls
+and read_assoc ls i =
+  let length = List.length ls in
+  (match ls with
+    | [] -> ()
+    | obj::lss ->
+      match obj with
+      | (key, value) ->
+        read_value value;
+    read_assoc lss (i + 1));
 
 and read_var_defs defs =
-  List.iter (fun def ->
-  match def with
+  let length = List.length defs in
+  match defs with
+  | [] -> ()
+  | de::des ->
+    match de with
     | {
         name;
         typ;
         default_value;
       } ->
       read_type typ;
-  ) defs
+    read_var_defs des;
 
 and read_type typ =
   match typ with
-    | NamedType str ->  ()
+    | NamedType str -> ()
     | ListType tTyp -> read_type tTyp
     | NonNullType tTyp -> read_type tTyp
