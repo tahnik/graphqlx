@@ -27,9 +27,9 @@ let test (filename: string) =
   printf "OK\n";;
 
 let read_files = 
-  if Dir.dir_is_empty "validation/test/assets" then
+  if Dir.dir_is_empty "src/validation/test/assets" then
     printf "No Files Found"
   else
     List.iter (fun name ->
       test name 
-    ) (List.rev (Dir.dir_contents "validation/test/assets"));
+    ) (List.rev (Dir.dir_contents "src/validation/test/assets"));
