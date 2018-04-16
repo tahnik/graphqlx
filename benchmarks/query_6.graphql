@@ -1,0 +1,7 @@
+mutation {
+  createPost(input: { title: "GraphQL Security" }) {
+    post {
+      title
+    }
+  }
+}

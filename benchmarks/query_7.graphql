@@ -1,0 +1,15 @@
+query IAmEvil {
+  author(id: "abc") {
+    posts {
+      author {
+        posts {
+          author {
+            posts {
+              author
+            }
+          }
+        }
+      }
+    }
+  }
+}

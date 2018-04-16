@@ -1,0 +1,33 @@
+query FootballEventsInSeattle {
+  viewer {
+    allEvents(where: {
+      date: {
+        gt: "2017"
+      },
+      city: {
+        name: {
+          eq: "Seattle"
+        }
+      },
+      sport: {
+        name: {
+          eq: "Football"
+        }
+      }
+    }) {
+      edges {
+        node {
+          id
+          name
+          sport {
+            id
+            name
+          }
+        }
+      }
+      aggregations {
+        count
+      }
+    }
+  }
+}

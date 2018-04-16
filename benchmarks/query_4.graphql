@@ -1,0 +1,37 @@
+query AllAdminsInDeveloperRole {
+  viewer {
+    allUsers(where: {
+      roles: {
+        edge: {
+          createdAt: {
+            gt:"2017"
+          },
+          accessLevel: {
+            eq: admin
+          }
+        },
+        node: {
+          name: {
+            eq: "Developer"
+          }
+        }
+      }
+    }) {
+      edges {
+        node {
+          id
+          username
+          roles {
+            edges {
+              createdAt
+              node {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
