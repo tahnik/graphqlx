@@ -1,0 +1,11 @@
+mutation {
+  addComment(
+    postId: 42,
+    authorEmail: "mark@fb.com",
+    markdown: "GraphQL is clearly a **game changer***"
+  ) {
+    id,
+    formattedBody,
+    timestamp
+  }
+}

@@ -1,0 +1,20 @@
+query SportsWithEventsInSF {
+  viewer {
+    allSports(where: {
+      events: {
+        city: {
+          name: {
+            eq: "San Francisco"
+          }
+        }
+      }
+    }) {
+      edges {
+        node {
+          id
+          name
+        }
+      }
+    }
+  }
+}
