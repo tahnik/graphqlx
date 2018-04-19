@@ -1,20 +1,13 @@
-{
-  firstSearchResult {
-    ... on Person {
-      name
-    }
-    ... on Photo {
-      height
-    }
+query getName {
+  dog {
+    name
   }
 }
 
-{
-  entity {
-    name
-    ... on Person {
-      age
+query getName {
+  dog {
+    owner {
+      name
     }
-  },
-  phoneNumber
+  }
 }

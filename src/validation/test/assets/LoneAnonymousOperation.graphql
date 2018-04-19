@@ -1,0 +1,20 @@
+{
+  firstSearchResult {
+    ... on Person {
+      name
+    }
+    ... on Photo {
+      height
+    }
+  }
+}
+
+{
+  entity {
+    name
+    ... on Person {
+      age
+    }
+  },
+  phoneNumber
+}
