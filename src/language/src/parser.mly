@@ -110,7 +110,7 @@ read_selection:
     selection_set = read_selection_set
     {
       Field {
-        alias=None; name=name;
+        alias=alias; name=name;
         arguments=arguments;
         directives=directives;
         selection_set=selection_set;
