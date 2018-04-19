@@ -6,7 +6,17 @@ let print_file filename =
   let rins = String.rindex filename '/' in
   let rind = String.rindex filename '.' in
   let name = String.sub filename (rins + 1) (rind - (rins + 1)) in
-  printf "Testing %s: " (String.capitalize name);;
+  let stringLength: int = String.length name in
+  let nLeft: int = 50 - stringLength in
+  let sSide: int = nLeft / 2 in
+  for i = 0 to sSide do
+    printf "=";
+  done;
+  printf " %s " (String.capitalize name);
+  for i = 0 to sSide do
+    printf "=";
+  done;
+  printf "\n";;
 
 let read_file filename = 
   let lines = ref [] in
@@ -20,15 +30,12 @@ let read_file filename =
     List.rev !lines ;;
 
 let test (filename: string) =
-  printf "\n\n\n";
+  print_file filename;
+  printf "\n";
   let strL = read_file filename in
   let str = String.concat "" strL in
-  Parse.parse str false;
-  (* let lexbuf = Lexing.from_string str in
-  lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = str };
-  Parse.parse_from_buf lexbuf; *)
-  print_file filename;
-  printf "OK\n";;
+  Parse.parse str true;
+  printf "TEST RESULT: OK\n\n\n";;
 
 let read_files = 
   if Dir.dir_is_empty "src/language/test/assets" then
