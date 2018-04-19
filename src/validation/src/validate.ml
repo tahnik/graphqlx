@@ -1,3 +1,9 @@
+(**
+ * Name: Validate
+ *
+ * Calls all the separate modules that validates a query
+ *)
+
 open Lexing
 open Printf
 
