@@ -6,7 +6,17 @@ let print_file filename =
   let rins = String.rindex filename '/' in
   let rind = String.rindex filename '.' in
   let name = String.sub filename (rins + 1) (rind - (rins + 1)) in
-  printf "Testing %s: " (String.capitalize name);;
+  let stringLength: int = String.length name in
+  let nLeft: int = 50 - stringLength in
+  let sSide: int = nLeft / 2 in
+  for i = 0 to sSide do
+    printf "=";
+  done;
+  printf " %s " (String.capitalize name);
+  for i = 0 to sSide do
+    printf "=";
+  done;
+  printf "\n";;
 
 let read_file filename = 
   let lines = ref [] in
@@ -21,10 +31,12 @@ let read_file filename =
 
 let test (filename: string) =
   print_file filename;
+  printf "EXPECT: validation error\n";
   let strL = read_file filename in
   let str = String.concat "" strL in
-  Validate.validate str;
-  printf "OK\n";;
+  let error = Validate.validate str in
+  if error then printf "\nTEST RESULT: OK\n" else printf "\nTEST RESULT: FAILED\n";
+  printf "\n";;
 
 let read_files = 
   if Dir.dir_is_empty "src/validation/test/assets" then
