@@ -1,10 +1,18 @@
 import { parse } from "../lib/js/parse";
 import { validate } from "../lib/js/validate";
-import { POST } from "./http/src/http";
+import * as NetworkManager from "./network_manager/src/main";
 
 const fetch = (endpoint, query, header) => {
   validate(query);
-  POST(endpoint, query, header);
+  NetworkManager.get(endpoint, query, header)
+  .then((res) => {
+    console.log(res);
+  })
+  .catch((err) => {
+    console.log(err);
+  })
 };
 
-export { fetch, parse, validate };
+const { enableCache, enableBatch } = NetworkManager;
+
+export { fetch, parse, validate, enableCache, enableBatch };

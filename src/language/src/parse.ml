@@ -50,5 +50,4 @@ let parse (graphql: string) (pretty_print: bool) =
 (* Similar to parse but takes a input buffer instead of string *)
 let parse_from_buf buf =
   let ast = parse_and_print buf in
-  Prettify.print ast;
   ast;

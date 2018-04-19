@@ -19,7 +19,7 @@
     "create:language": "mkdir -p build/coj",
     "build:parser": "npm run create:language && menhir --base build/coj/parser src/language/src/parser.mly",
     "build:lexer": "npm run create:language && ocamllex -o build/coj/lexer.ml src/language/src/lexer.mll",
-    "copy:language": "cp src/language/src/parse.ml build/coj && cp src/language/src/graphql.ml build/coj && cp lib/ocaml/prettify/prettify.ml build/coj",
+    "copy:language": "cp src/language/src/parse.ml build/coj && cp src/language/src/types.ml build/coj && cp lib/ocaml/prettify/prettify.ml build/coj",
     "post:language": "mv lib/js/build/coj/* lib/js && rm -rf lib/bs && rm -rf lib/js/build",
     "build:language": "npm run clean:language && npm run build:parser && npm run build:lexer && npm run copy:language && bsb -make-world && npm run post:language",
     "clean:validation": "rm -rf build/coj",
