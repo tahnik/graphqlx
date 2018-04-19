@@ -25,7 +25,6 @@ match fr with
       directives;
       selection_set;
     } ->
-    read_directives directives;
     read_selection_set selection_set;
 
 and read_operation op =
@@ -44,8 +43,6 @@ match op with
     (match name with
       | None -> ()
       | Some value -> ());
-    read_var_defs variable_definitions;
-    read_directives directives;
     read_selection_set selection_set;
 
 and read_selection_set selection_set =
@@ -54,17 +51,10 @@ and read_selection_set selection_set =
   | selection::sel_sets ->
     (match selection with
       | Field field -> read_field field
-      | FragmentSpread spread -> read_frag_spread spread 
+      | FragmentSpread spread -> ()
       | InlineFragment frag -> read_inline_frag frag);
     read_selection_set sel_sets;
 
-and read_frag_spread spread = 
-  match spread with
-    | {
-        name;
-        directives;
-      } ->
-      read_directives directives;
 
 and read_inline_frag frag =
   match frag with
@@ -76,7 +66,6 @@ and read_inline_frag frag =
       (match type_condition with
       | None -> ()
       | Some typ -> ());
-      read_directives directives;
       read_selection_set selection_set;
 
 and read_field field =
@@ -101,84 +90,8 @@ and read_field field =
         )
       );
     );
-    read_arguments arguments 0;
-    read_selection_set selection_set;
+    read_selection_set selection_set;;
 
-and read_directives directives =
-  match directives with
-  | [] -> ()
-  | direc::direcs ->
-    match direc with
-    | {
-        name;
-        arguments
-      } ->
-      read_arguments arguments 0;
-    read_directives direcs;
-
-and read_arguments arguments i =
-  let length = List.length arguments in
-  match arguments with
-  | [] -> ()
-  | arg::args ->
-    match arg with
-    | (key, value) ->
-      read_value value;
-    read_arguments args (i + 1);
-
-
-and read_value value =
-  match value with
-    | `Variable vari -> ()
-    | `Null -> ()
-    | `Int intVal -> ()
-    | `Float floatVal -> ()
-    | `String str -> ()
-    | `Bool bl ->
-      (match bl with
-        | true -> ()
-        | false -> ())
-    | `Enum en -> ()
-    | `List ls -> read_list ls 0
-    | `Assoc ls -> read_assoc ls 0
-
-and read_list ls i =
-  let length = List.length ls in
-  match ls with
-    | [] -> ()
-    | value::lss ->
-      read_value value;
-    read_list lss (i + 1);
-
-and read_assoc ls i =
-  let length = List.length ls in
-  (match ls with
-    | [] -> ()
-    | obj::lss ->
-      match obj with
-      | (key, value) ->
-        read_value value;
-    read_assoc lss (i + 1));
-
-and read_var_defs defs =
-  let length = List.length defs in
-  match defs with
-  | [] -> ()
-  | de::des ->
-    match de with
-    | {
-        name;
-        typ;
-        default_value;
-      } ->
-      read_type typ;
-    read_var_defs des;
-
-and read_type typ =
-  match typ with
-    | NamedType str -> ()
-    | ListType tTyp -> read_type tTyp
-    | NonNullType tTyp -> read_type tTyp;;
 
 let validate definitions =
   read_doc definitions;
