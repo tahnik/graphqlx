@@ -8,6 +8,7 @@ let validate (str: string) =
   let lexbuf = Lexing.from_string str in
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = str };
   let ast = (Parse.parse_from_buf lexbuf) in
-  error := UniqueOperationNames.validate ast;
-  error := LoneAnonymousOperation.validate ast;
+  if UniqueOperationNames.validate ast then error := true;
+  if LoneAnonymousOperation.validate ast then error := true;
+  if FieldSelectionMerging.validate ast then error := true;
   !error;

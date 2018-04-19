@@ -14,7 +14,7 @@ let parse_with_error lexbuf =
     None
   | Parser.Error ->
     fprintf stderr "%a: syntax error\n" print_position lexbuf;
-    exit (-1)
+    None;;
 
 let rec parse_and_print lexbuf =
   let ast: Graphql.document ref = ref [] in
@@ -33,4 +33,6 @@ let parse (graphql: string) (pretty_print: bool) =
   ast;;
 
 let parse_from_buf buf =
-  parse_and_print buf;;
+  let ast = parse_and_print buf in
+  Prettify.print ast;
+  ast;
