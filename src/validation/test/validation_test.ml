@@ -1,3 +1,11 @@
+(**
+ * Name: Validation_test
+ *
+ * Reads all the graphql files in the ./assets directory
+ * and tests them
+ *)
+
+
 open Lexer
 open Lexing
 open Printf
@@ -18,6 +26,7 @@ let print_file filename =
   done;
   printf "\n";;
 
+
 let read_file filename = 
   let lines = ref [] in
   let chan = open_in filename in
@@ -29,6 +38,7 @@ let read_file filename =
     close_in chan;
     List.rev !lines ;;
 
+
 let test (filename: string) =
   print_file filename;
   printf "EXPECT: validation error\n";
@@ -37,6 +47,7 @@ let test (filename: string) =
   let error = Validate.validate str in
   if error then printf "\nTEST RESULT: OK\n" else printf "\nTEST RESULT: FAILED\n";
   printf "\n";;
+
 
 let read_files = 
   if Dir.dir_is_empty "src/validation/test/assets" then
