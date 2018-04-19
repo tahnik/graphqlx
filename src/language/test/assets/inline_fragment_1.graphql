@@ -1,5 +1,5 @@
 query inlineFragmentTyping {
-  profiles(handles: ["zuck", "cocacola"]) {
+  profiles(handles: ["cocacola"]) {
     handle
     ... on User {
       friends {

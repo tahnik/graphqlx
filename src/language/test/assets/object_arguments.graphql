@@ -1,5 +1,5 @@
 query FragmentTyping {
-  profiles(handles: { zuck: "cocacola" }) {
+  profiles(handles: { zuck: "cocacola", mark: "Pepsi" }) {
     handle
     ...userFragment
     ...pageFragment
