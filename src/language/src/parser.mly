@@ -1,6 +1,14 @@
+(**
+ * Name: Parser
+ * 
+ * The input for Menhir. Contains the grammar for GraphQL
+ *)
+
 %token <int> INT
 %token <float> FLOAT
 %token <string> STRING
+%token <string> NAME
+%token <string> ON
 %token NULL
 %token TRUE
 %token FALSE
@@ -16,17 +24,15 @@
 %token BANG
 %token SPREAD
 %token AT
-%token <string> NAME
-
 %token QUERY
 %token MUTATION
 %token FRAGMENT
-%token <string> ON
 
+
+(* Opening the Types so that the grammars understand the GraphQL types *)
 %{
   open Types
 %}
-
 
 %start <Types.document option> prog
 %%
@@ -70,6 +76,7 @@ read_definitions:
         selection_set=selection_set;
       }::definitions
     }
+  (* Fragment *)
   | definitions = read_definitions
     FRAGMENT name = read_fragment_name type_condition = read_type_condition
     directives = read_directives
@@ -91,10 +98,12 @@ read_optype:
   | MUTATION
     { Mutation }
 
+
 read_selection_set:
   | { [] }
   | read_selection_set LEFT_BRACE selections = read_selection RIGHT_BRACE
     { selections }
+
 
 read_selection:
   | { [] }
@@ -134,25 +143,30 @@ read_selection:
       }::selections
     }
 
+
 read_type_condition:
   ON named_type = read_name
   { named_type }
+
 
 read_alias:
   | { None }
   | read_alias name = read_name COLON
     { Some name }
 
+
 read_arguments:
   | { [] }
   | LEFT_PAREN arguments = read_argument RIGHT_PAREN
     { arguments }
+
 
 read_argument:
   | { [] }
   | arguments = read_argument
     name = read_name COLON value = read_value
     { (name, value)::arguments }
+
 
 read_value:
   | value = read_variable
@@ -176,6 +190,7 @@ read_value:
   | LEFT_BRACE value = read_object RIGHT_BRACE
     { `Assoc value }
 
+
 read_const_value:
   | value = STRING
     { `String value }
@@ -196,25 +211,30 @@ read_const_value:
   | LEFT_BRACE value = read_const_object RIGHT_BRACE
     { `Assoc value }
 
+
 read_list:
   | { [] }
   | listVal = read_list value = read_value 
     { value::listVal }
+
 
 read_const_list:
   | { [] }
   | listVal = read_const_list value = read_const_value 
     { value::listVal }
 
+
 read_object:
   | { [] }
   | fields = read_object key = NAME COLON value = read_value
     { (key, value)::fields }
     
+    
 read_const_object:
   | { [] }
   | fields = read_const_object key = STRING COLON value = read_const_value
     { (key, value)::fields }
+
 
 read_directives:
   | { [] }
@@ -223,11 +243,13 @@ read_directives:
       { name=name; arguments=arguments }::directives
     }
 
+
 read_variable_definitions:
   | { [] }
   | definitions = read_variable_definitions
     LEFT_PAREN definition = read_variable_definition RIGHT_PAREN
     { definition::definitions }
+
 
 read_variable_definition:
   | name = read_variable COLON
@@ -237,9 +259,11 @@ read_variable_definition:
       { name=name; typ=typ; default_value=default_value }
     }
 
+
 read_variable:
   | DOLLAR value = read_name
     { value }
+
 
 read_type:
   | value = read_name
@@ -249,9 +273,11 @@ read_type:
   | value = read_type BANG
     { NonNullType value }
 
+
 read_fragment_name:
   | value = NAME
     { value }
+
 
 read_name:
   | value = ON
