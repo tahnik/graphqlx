@@ -1,4 +1,8 @@
-
+(**
+ * Name: Types
+ *
+ * Defines all the possible types of a GraphQL query
+ *)
 
 type primitive_value = [
   | `Null
