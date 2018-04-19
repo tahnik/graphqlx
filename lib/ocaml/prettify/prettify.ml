@@ -5,7 +5,7 @@
  *)
 
 
-open Graphql
+open Types
 open Printf
 
 let spaces : int ref = ref 0;;

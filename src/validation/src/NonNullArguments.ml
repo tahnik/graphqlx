@@ -1,4 +1,4 @@
-open Graphql
+open Types
 open Printf
 
 let error: bool ref = ref false;;

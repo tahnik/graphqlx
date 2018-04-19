@@ -27,11 +27,11 @@
 %token <string> ON
 
 %{
-  open Graphql
+  open Types
 %}
 
 
-%start <Graphql.document option> prog
+%start <Types.document option> prog
 %%
 
 prog:

@@ -1,4 +1,4 @@
-open Graphql
+open Types
 open Printf
 
 let numberOfShorthands: int ref = ref 0;;

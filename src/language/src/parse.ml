@@ -17,7 +17,7 @@ let parse_with_error lexbuf =
     None;;
 
 let rec parse_and_print lexbuf =
-  let ast: Graphql.document ref = ref [] in
+  let ast: Types.document ref = ref [] in
   (match parse_with_error lexbuf with
   | Some value ->
     ast := value;
