@@ -1,3 +1,10 @@
+(**
+ * Name: Parser_test
+ *
+ * Reads all the graphql files in the ./assets directory
+ * and tests them
+ *)
+
 open Lexer
 open Lexing
 open Printf
@@ -18,6 +25,7 @@ let print_file filename =
   done;
   printf "\n";;
 
+
 let read_file filename = 
   let lines = ref [] in
   let chan = open_in filename in
@@ -29,6 +37,7 @@ let read_file filename =
     close_in chan;
     List.rev !lines ;;
 
+
 let test (filename: string) =
   print_file filename;
   printf "\n";
@@ -36,6 +45,7 @@ let test (filename: string) =
   let str = String.concat "" strL in
   Parse.parse str true;
   printf "TEST RESULT: OK\n\n\n";;
+
 
 let read_files = 
   if Dir.dir_is_empty "src/language/test/assets" then
