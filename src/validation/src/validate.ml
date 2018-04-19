@@ -11,4 +11,5 @@ let validate (str: string) =
   if UniqueOperationNames.validate ast then error := true;
   if LoneAnonymousOperation.validate ast then error := true;
   if FieldSelectionMerging.validate ast then error := true;
+  if ArgumentUniqueness.validate ast then error := true;
   !error;

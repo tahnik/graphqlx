@@ -86,7 +86,8 @@ and read_field field =
         let alexists = List.exists (fun x -> compare x alias == 0) !listOfNames in
         if alexists then
         (
-          error := true
+          error := true;
+          printf "\nvalidation error: cannot apply different data on same field name\n";
         )
       );
     );
