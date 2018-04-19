@@ -15,10 +15,7 @@
 %token DOLLAR
 %token BANG
 %token SPREAD
-%token EQUAL
 %token AT
-%token BAR
-%token POUND
 %token <string> NAME
 
 %token QUERY
