@@ -122,5 +122,6 @@ and read_arguments arguments i =
     read_arguments args (i + 1);;
 
 let validate definitions =
+  error := false;
   read_doc definitions;
   !error

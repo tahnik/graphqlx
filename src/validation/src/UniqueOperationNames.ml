@@ -38,6 +38,7 @@ match op with
       | Some value -> checkIfExists !listOfNames value;;
 
 let validate definitions =
+  error := false;
   listOfNames = ref [];
   read_doc definitions;
   !error;

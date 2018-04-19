@@ -2,7 +2,7 @@ open Graphql
 open Printf
 
 let error: bool ref = ref false;;
-let listOfArgs: string list ref = ref [];;
+let listOfFrags: string list ref = ref [];;
 
 let rec read_doc definitions =
   (match definitions with
@@ -25,6 +25,13 @@ match fr with
       directives;
       selection_set;
     } ->
+    let exists = List.exists (fun x -> compare x name == 0) !listOfFrags in
+    if exists then
+    (
+      error := true;
+      printf "\nvalidation error: cannot have duplicate Fragment Names\n";
+    );
+    listOfFrags := !listOfFrags@[name];
     read_directives directives;
     read_selection_set selection_set;
 
@@ -109,17 +116,10 @@ and read_directives directives =
 and read_arguments arguments i =
   let length = List.length arguments in
   match arguments with
-  | [] -> listOfArgs := []
+  | [] -> ()
   | arg::args ->
     match arg with
     | (key, value) ->
-      let exists = List.exists (fun x -> compare x key == 0) !listOfArgs in
-      if exists then
-      (
-        error := true;
-        printf "\nvalidation error: arguments cannot have duplicate names\n";
-      );
-      listOfArgs := !listOfArgs@[key];
       read_value value;
     read_arguments args (i + 1);
 

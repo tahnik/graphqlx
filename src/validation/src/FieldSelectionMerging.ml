@@ -95,5 +95,6 @@ and read_field field =
 
 
 let validate definitions =
+  error := false;
   read_doc definitions;
   !error

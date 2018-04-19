@@ -39,6 +39,7 @@ and read_operation op =
         | Some value -> ());;
 
 let validate definitions =
+  error := false;
   numberOfShorthands := 0;
   read_doc definitions;
   !error
