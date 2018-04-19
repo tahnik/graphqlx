@@ -142,7 +142,7 @@ and read_directives directives =
 and read_arguments arguments i =
   let length = List.length arguments in
   if length > 0 then
-    print_spaces !spaces;
+    if i == 0 then print_spaces !spaces;
   if length > 0 then
     if i < 1 then printf "Arguments: (";
   match arguments with
@@ -154,7 +154,7 @@ and read_arguments arguments i =
       read_value value;
       if i < length - 1 then printf ", " else printf "";
     read_arguments args (i + 1);
-  if length > 0 then printf ")\n";
+  if i == 0 then printf ")\n";
 
 
 and read_value value =
