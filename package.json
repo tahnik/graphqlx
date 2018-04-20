@@ -31,6 +31,8 @@
     "dist": "npm run build:validation && webpack --config webpack/webpack.prod.js",
     "dist:js": "webpack --config webpack/webpack.prod.js",
     "test:js": "jest",
+    "test:parser": "make test_parser && ./parser_test.native",
+    "test:validation": "make test_validation && ./validation_test.native",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
@@ -48,7 +50,8 @@
   },
   "homepage": "https://github.com/tahnik/graphqlx#readme",
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.18.0",
+    "node-fetch": "^2.1.2"
   },
   "devDependencies": {
     "bs-platform": "^2.2.2",
@@ -58,6 +61,8 @@
     "webpack-cli": "^2.0.14"
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "jest-extended"
+    "setupTestFrameworkScriptFile": "jest-extended",
+    "browser": true,
+    "verbose": true
   }
 }

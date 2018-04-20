@@ -23,9 +23,7 @@ let query = `query {
 
 GraphQL.enableCache(true);
 
-GraphQL.fetch("https://api.github.com/graphql", query, header);
-
-setTimeout(() => {
+setInterval(() => {
   GraphQL.fetch("https://api.github.com/graphql", query, header)
   .then(res => {
     console.log(res);

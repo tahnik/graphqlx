@@ -20,10 +20,10 @@ let parse_with_error lexbuf =
   try Parser.prog Lexer.read lexbuf with
   | Lexer.SyntaxError msg ->
     fprintf stderr "%a: %s\n" print_position lexbuf msg;
-    None
+    exit(-1)
   | Parser.Error ->
     fprintf stderr "%a: syntax error\n" print_position lexbuf;
-    None;;
+    exit(-1)
 
 (* Helper function for parsing *)
 let rec parse_and_print lexbuf =

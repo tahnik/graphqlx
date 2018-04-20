@@ -16,6 +16,7 @@ let query = `{
   }
 }`;
 
+console.log = jest.fn()
 
 test('Graphloc', () => {
   return expect(fetch("https://api.graphloc.com/graphql", query)).resolves.toBeObject();

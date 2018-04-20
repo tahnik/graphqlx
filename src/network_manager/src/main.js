@@ -23,7 +23,7 @@ const get = (endpoint, query, headers) => {
       return new Promise(function(resolve, reject) {
         let timePassed = 0;
         let tim = setInterval(() => {
-          if (timePassed > 4000) {
+          if (timePassed > 400) {
             clearInterval(tim);
             reject("Could not get a response");
           } else {

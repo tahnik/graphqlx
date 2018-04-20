@@ -1,20 +1,20 @@
-import axios from 'axios';
+import fetch from 'node-fetch';
 import * as Cache from './cache';
 
 const POST = (endpoint, query, headers) => {
   return new Promise(function(resolve, reject) {
-    axios.post(
+    fetch(
       endpoint,
-      { query: query },
       {
-        headers
+        method: 'POST',
+        body: JSON.stringify({ query: query }),
+        headers: { 'Content-Type': 'application/json', ...headers }
       }
     )
     .then((response) => {
-      const { data } = response;
-      const jsonS = JSON.stringify(data);
-      Cache.set(query, data);
-      resolve(data);
+      const res = response.json();
+      Cache.set(query, res);
+      resolve(res);
     })
     .catch((err) => {
       reject(err);
