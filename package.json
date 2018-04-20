@@ -33,7 +33,7 @@
     "test:js": "jest",
     "test:parser": "make test_parser && ./parser_test.native",
     "test:validation": "make test_validation && ./validation_test.native",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test:parser && npm run test:validation && npm run test:js"
   },
   "license": "MIT",
   "repository": {
@@ -50,13 +50,13 @@
   },
   "homepage": "https://github.com/tahnik/graphqlx#readme",
   "dependencies": {
-    "axios": "^0.18.0",
     "node-fetch": "^2.1.2"
   },
   "devDependencies": {
     "bs-platform": "^2.2.2",
     "jest": "^22.4.3",
     "jest-extended": "^0.7.1",
+    "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14"
   },
