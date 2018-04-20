@@ -17,7 +17,6 @@ let query = `{
 }`;
 
 
-it('works with resolves', () => {
-  expect.assertions(1);
+test('Graphloc', () => {
   return expect(fetch("https://api.graphloc.com/graphql", query)).resolves.toBeObject();
 });

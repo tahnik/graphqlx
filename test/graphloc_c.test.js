@@ -20,9 +20,13 @@ GraphQL.enableCache(true);
 
 GraphQL.fetch("https://api.graphloc.com/graphql", query);
 
-setTimeout(() => {
-  GraphQL.fetch("https://api.graphloc.com/graphql", query)
-  .then(res => {
-    console.log(res);
-  })
-}, 1000);
+
+test('Graphloc Cache', done => {
+  setTimeout(() => {
+    GraphQL.fetch("https://api.graphloc.com/graphql", query)
+    .then(res => {
+      done();
+      console.log(res);
+    })
+  }, 1000);
+});
