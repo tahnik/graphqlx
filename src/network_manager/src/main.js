@@ -13,7 +13,7 @@ const enableBatch = (bool) => {
 const get = (endpoint, query, headers) => {
   if (Cache.exists(query)) {
     return new Promise(function(resolve, reject) {
-      resolve(Cache.get(query));
+      resolve(Cache.get(query).data);
     });
   }
   if (Batch.ENABLED) {
@@ -34,7 +34,7 @@ const get = (endpoint, query, headers) => {
         }, 200);
       });
     } else {
-      return makeRequest(endpoint, query, headers);
+      return HTTP.POST(endpoint, query, headers);
     }
   } else {
     return HTTP.POST(endpoint, query, headers);

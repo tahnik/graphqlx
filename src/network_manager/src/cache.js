@@ -26,12 +26,11 @@ const get = query => {
     return { success: false };
   }
   console.log("Retrieving data from cache");
-  return { success: true, data: cache[query] };
+  return { success: true, data: cache[query].response };
 }
 
 const set = (query, response) => {
   if (!ENABLED) {
-    console.error("Cache not enabled");
     return { success: false };
   }
   if (exists(query)) {
@@ -61,6 +60,6 @@ const clear = () => {
 
 setInterval(() => {
   clear();
-}, 5000);
+}, 3000);
 
 export { exists, get, set, enableCache, ENABLED };

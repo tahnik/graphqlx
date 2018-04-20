@@ -59,7 +59,9 @@ const sendBatchRequests = () => {
     console.info("Sending Batch Requests");
     HTTP.POST(endpoint, queries, headers)
     .then((res) => {
-      batchedResponse = res.data;
+      if (res.data) {
+        batchedResponse = res.data;
+      }
     })
     .catch(() => {
       batchedResponse = {};

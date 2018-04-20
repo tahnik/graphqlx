@@ -13,7 +13,7 @@ const POST = (endpoint, query, headers) => {
     .then((response) => {
       const { data } = response;
       const jsonS = JSON.stringify(data);
-      Cache.set(query, jsonS);
+      Cache.set(query, data);
       resolve(data);
     })
     .catch((err) => {
