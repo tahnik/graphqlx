@@ -4,13 +4,7 @@ import * as NetworkManager from "./network_manager/src/main";
 
 const fetch = (endpoint, query, header) => {
   validate(query);
-  NetworkManager.get(endpoint, query, header)
-  .then((res) => {
-    console.log(res);
-  })
-  .catch((err) => {
-    console.log(err);
-  })
+  return NetworkManager.get(endpoint, query, header);
 };
 
 const { enableCache, enableBatch } = NetworkManager;

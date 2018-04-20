@@ -18,7 +18,6 @@ const POST = (endpoint, query, headers) => {
     })
     .catch((err) => {
       reject(err);
-      console.log(err);
     })
   });
 }
