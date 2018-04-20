@@ -71,7 +71,7 @@ const sendBatchRequests = () => {
 
 setInterval(() => {
   sendBatchRequests();
-}, 100);
+}, 10);
 
 setInterval(() => {
   batchedResponse = {};

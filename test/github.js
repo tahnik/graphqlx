@@ -21,7 +21,9 @@ let query = `query {
   }
 }`;
 
+console.time("q1")
 fetch("https://api.github.com/graphql", query, header)
 .then((res) => {
+  console.timeEnd("q1")
   console.log(res);
 })

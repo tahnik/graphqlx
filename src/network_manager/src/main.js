@@ -22,16 +22,18 @@ const get = (endpoint, query, headers) => {
       Batch.add(endpoint, query, headers, id);
       return new Promise(function(resolve, reject) {
         let timePassed = 0;
-        setInterval(() => {
-          if (timePassed > 10) {
+        let tim = setInterval(() => {
+          if (timePassed > 4000) {
+            clearInterval(tim);
             reject("Could not get a response");
           } else {
             if (Batch.exists(id)) {
+              clearInterval(tim);
               resolve(Batch.get(id).data);
             }
           }
           timePassed++;
-        }, 200);
+        }, 5);
       });
     } else {
       return HTTP.POST(endpoint, query, headers);

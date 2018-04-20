@@ -27,8 +27,12 @@ let query3 = `{
 
 GraphQL.enableBatch(true);
 
+console.time("q1")
+console.time("q2")
+console.time("q3")
 GraphQL.fetch("https://api.github.com/graphql", query1, header)
 .then((res) => {
+  console.timeEnd("q1")
   console.log(res);
 })
 .catch((err) => {
@@ -36,6 +40,7 @@ GraphQL.fetch("https://api.github.com/graphql", query1, header)
 })
 GraphQL.fetch("https://api.github.com/graphql", query2, header)
 .then((res) => {
+  console.timeEnd("q2")
   console.log(res);
 })
 .catch((err) => {
@@ -43,6 +48,7 @@ GraphQL.fetch("https://api.github.com/graphql", query2, header)
 })
 GraphQL.fetch("https://api.github.com/graphql", query3, header)
 .then((res) => {
+  console.timeEnd("q3")
   console.log(res);
 })
 .catch((err) => {
