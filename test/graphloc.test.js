@@ -16,10 +16,8 @@ let query = `{
   }
 }`;
 
-fetch("https://api.graphloc.com/graphql", query)
-.then((res) => {
-  console.log(res);
-})
-.catch((err) => {
-  console.log(err);
-})
+
+it('works with resolves', () => {
+  expect.assertions(1);
+  return expect(fetch("https://api.graphloc.com/graphql", query)).resolves.toBeObject();
+});

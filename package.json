@@ -30,7 +30,7 @@
     "create:dir": "mkdir -p build/coj",
     "dist": "npm run build:validation && webpack --config webpack/webpack.prod.js",
     "dist:js": "webpack --config webpack/webpack.prod.js",
-    "test:js": "node dist/test/github.js",
+    "test:js": "jest",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
@@ -51,8 +51,13 @@
     "axios": "^0.18.0"
   },
   "devDependencies": {
+    "bs-platform": "^2.2.2",
+    "jest": "^22.4.3",
+    "jest-extended": "^0.7.1",
     "webpack": "^4.5.0",
-    "webpack-cli": "^2.0.14",
-    "bs-platform": "^2.2.2"
+    "webpack-cli": "^2.0.14"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "jest-extended"
   }
 }
