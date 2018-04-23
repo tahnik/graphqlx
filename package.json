@@ -50,12 +50,12 @@
   },
   "homepage": "https://github.com/tahnik/graphqlx#readme",
   "dependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.6.1",
     "node-fetch": "^2.1.2"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "bs-platform": "^2.2.2",
     "jest": "^22.4.3",
