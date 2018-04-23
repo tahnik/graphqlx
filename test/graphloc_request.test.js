@@ -16,6 +16,6 @@ let query = `{
   }
 }`;
 
-test('Graphloc', () => {
+test('Graphloc: The request should be resolved', () => {
   return expect(fetch("https://api.graphloc.com/graphql", query)).resolves.toBeObject();
 });

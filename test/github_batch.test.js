@@ -27,9 +27,7 @@ let query3 = `{
 
 GraphQL.enableBatch(true);
 
-test('Graphloc Batch', done => {
-  GraphQL.enableBatch(true);
-
+test('GitHub Batch: All the requests should be resolved', done => {
   let q1, q2, q3 = false;
 
   GraphQL.fetch("https://api.github.com/graphql", query1, header)

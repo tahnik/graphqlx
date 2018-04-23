@@ -21,6 +21,6 @@ let query = `query {
   }
 }`;
 
-test('Graphloc', () => {
+test('GitHub: The request should be resolved', () => {
   return expect(fetch("https://api.github.com/graphql", query, header)).resolves.toBeObject();
 });

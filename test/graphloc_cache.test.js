@@ -16,16 +16,17 @@ let query = `{
   }
 }`;
 
+jest.setTimeout(10000);
+
 GraphQL.enableCache(true);
 
-GraphQL.fetch("https://api.graphloc.com/graphql", query);
-
-test('Graphloc Cache', done => {
-  setTimeout(() => {
-    GraphQL.fetch("https://api.graphloc.com/graphql", query)
-    .then(res => {
+test('Graphloc Cache: All the requests should be resolved', done => {
+  let i = 0;
+  setInterval(() => {
+    if (i > 4) {
       done();
-      console.log(res);
-    })
+    }
+    GraphQL.fetch("https://api.graphloc.com/graphql", query);
+    i++;
   }, 1000);
 });

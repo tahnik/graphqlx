@@ -48,24 +48,37 @@ let query3 = `{
   }
 }`;
 
-test('Graphloc Batch', done => {
-  GraphQL.enableBatch(true);
+GraphQL.enableBatch(true);
+test('Graphloc Batch: All the requests should be resolved', done => {
+  let q1, q2, q3 = false;
 
   GraphQL.fetch("https://api.graphloc.com/graphql", query1)
+  .then(() => {
+    q1 = true;
+  })
   .catch((err) => {
     console.log(err);
   })
 
   GraphQL.fetch("https://api.graphloc.com/graphql", query2)
+  .then(() => {
+    q2 = true;
+  })
   .catch((err) => {
     console.log(err);
   })
 
   GraphQL.fetch("https://api.graphloc.com/graphql", query3)
   .then((res) => {
-    done();
+    q3 = true;
   })
   .catch((err) => {
     console.log(err);
   })
+
+  setInterval(() => {
+    if (q1 && q2 && q3) {
+      done();
+    }
+  }, 10);
 });

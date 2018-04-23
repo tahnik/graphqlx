@@ -25,10 +25,10 @@ jest.setTimeout(10000);
 
 GraphQL.enableCache(true);
 
-test('Graphloc Cache', done => {
+test('GitHub Cache: All the requests should be resolved', done => {
   let i = 0;
   setInterval(() => {
-    if (i > 5) {
+    if (i > 4) {
       done();
     }
     GraphQL.fetch("https://api.github.com/graphql", query, header);
