@@ -1,1 +1,204 @@
-Hello World
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgb(64, 65, 90);
+      border-radius: 20px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 20px;
+    }
+
+    .main {
+      display: flex;
+      height: 100vh;
+      max-height: 100vh;
+      overflow-y: hidden; 
+    }
+    .tester {
+      flex: 1.3;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .logs {
+      flex: 1;
+    }
+    .endpoint {
+      display: flex;
+    }
+    .input-field {
+      margin-bottom: 1.5rem;
+    }
+    .queries {
+      display: flex;
+      margin: 1rem 0 1rem 0;
+      flex: 1;
+    }
+    .queries_cont {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .add_remove, .controls {
+      display: flex;
+      justify-content: center;
+    }
+    .add_remove > button, .controls > button {
+      margin-right: 0.5rem;
+    }
+    .thumbs {
+      flex: 1;
+      padding: 0 0.3rem 0.3rem 0.3rem;
+      overflow-y: auto;
+    }
+    .thumb {
+      padding: 0.5rem;
+      border-radius: 3px;
+      border: 1px solid grey; 
+      font-size: 0.3rem;
+      max-height: 150px;
+      margin: 0 0 0.5rem 0;
+      overflow-y: hidden;
+      cursor: pointer;
+    }
+    #q_take_input {
+      border-radius: 3px;
+      padding: 0.5rem;
+      height: 100%;
+      font-family: 'Fira Sans', sans-serif;
+    }
+    .query_in {
+      flex: 3;
+      display: flex;
+      margin: 0 0 0 0.5rem;
+    }
+    .take_input {
+      flex: 1;
+      display: flex;
+    }
+    .hline {
+      height: 2px;
+      background-color: cornflowerblue;
+      margin: 0 0 1rem 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main" id="app">
+    <div class="tester">
+      <div class="input-field endpoint">
+        <input
+          placeholder="https://api.graphloc.com/graphql"
+          type="text"
+          class="validate"
+        >
+        <label for="endpoint">API Endpoint</label>
+      </div>
+      <div class="input-field auth_header">
+        <input
+          placeholder="Default: None"
+          type="text"
+          class="validate"
+        >
+        <label for="auth_header">Authorization Header</label>
+      </div>
+      <div class="queries_cont">
+        <div class="add_remove">
+          <button
+            class="btn waves-effect waves-light"
+            v-on:click="addQuery"
+            name="action"
+          >
+            Add Query
+            <i class="material-icons right">add_circle</i>
+        </button>
+          <button
+            class="btn waves-effect waves-light"
+            v-on:click="removeQuery"
+            name="action">Remove Query
+            <i class="material-icons right">delete</i>
+          </button>
+          <button
+            class="btn waves-effect waves-light"
+            v-on:click="queries = []"
+            name="action">Remove All Queries
+            <i class="material-icons right">delete_sweep</i>
+          </button>
+        </div>
+        <div class="queries">
+          <div class="thumbs">
+            <pre
+              class="thumb"
+              v-for="(query, index) in queries"
+              @click="openInput(index)">{{ query }}</pre>
+          </div>
+          <div class="query_in">
+            <div v-if="queries.length > 0" class="take_input">
+              <textarea
+                id="q_take_input"
+                v-model="queries[currentInput]"
+              >{{ queries[currentInput] }}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hline"></div>
+      <div class="controls">
+        <button
+          class="btn waves-effect waves-light"
+          v-on:click="addQuery"
+          name="action"
+        >
+          Run Query
+          <i class="material-icons right">play_circle_filled</i>
+        </button>
+      </div>
+    </div>
+    <div class="logs"></div>
+  </div>
+
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        queries: [],
+        currentInput: 0
+      },
+      methods: {
+        addQuery: function() {
+          this.queries.push("# Remove this and Add a query here");
+          this.currentInput = this.queries.length - 1;
+        },
+        openInput: function(index) {
+          this.currentInput = index;
+        },
+        removeQuery: function() {
+          this.queries.splice(this.currentInput, 1);
+          if (this.queries.length != 0) {
+            this.currentInput = this.queries.length - 1;
+          }
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
