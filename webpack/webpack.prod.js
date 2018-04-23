@@ -7,7 +7,7 @@ let clientConfig = {
   mode: "production",
   output: {
     path: path.resolve(__dirname, "../dist"),
-    filename: "graphqlx.js",
+    filename: "graphqlx.web.js",
     library: "graphqlx",
     libraryTarget: "umd"
   },
@@ -31,7 +31,7 @@ let serverConfig = {
   mode: "production",
   output: {
     path: path.resolve(__dirname, "../dist"),
-    filename: "graphqlx.node.js",
+    filename: "graphqlx.js",
     library: "graphqlx",
     libraryTarget: "umd"
   },

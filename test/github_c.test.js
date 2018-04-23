@@ -21,11 +21,17 @@ let query = `query {
   }
 }`;
 
+jest.setTimeout(10000);
+
 GraphQL.enableCache(true);
 
-setInterval(() => {
-  GraphQL.fetch("https://api.github.com/graphql", query, header)
-  .then(res => {
-    console.log(res);
-  })
-}, 1000);
+test('Graphloc Cache', done => {
+  let i = 0;
+  setInterval(() => {
+    if (i > 5) {
+      done();
+    }
+    GraphQL.fetch("https://api.github.com/graphql", query, header);
+    i++;
+  }, 1000);
+});

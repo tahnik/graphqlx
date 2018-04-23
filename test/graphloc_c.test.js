@@ -16,8 +16,6 @@ let query = `{
   }
 }`;
 
-console.log = jest.fn()
-
 GraphQL.enableCache(true);
 
 GraphQL.fetch("https://api.graphloc.com/graphql", query);
