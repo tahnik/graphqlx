@@ -30,12 +30,7 @@ let clientConfig = {
   plugins: [
     new UglifyJsPlugin({
       sourceMap: true,
-      parallel: true,
-      uglifyOptions: {
-        compress: {
-          drop_console: true,
-        }
-      }
+      parallel: true
     })
   ]
 };
@@ -70,12 +65,7 @@ let serverConfig = {
   plugins: [
     new UglifyJsPlugin({
       sourceMap: true,
-      parallel: true,
-      uglifyOptions: {
-        compress: {
-          drop_console: true,
-        }
-      }
+      parallel: true
     })
   ]
 };

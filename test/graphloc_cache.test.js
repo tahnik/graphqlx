@@ -1,4 +1,4 @@
-const GraphQL = require("../dist/graphqlx");
+const GraphQL = require("../dist/graphqlx.node");
 
 let query = `{
   getLocation(ip: "189.59.228.170") {

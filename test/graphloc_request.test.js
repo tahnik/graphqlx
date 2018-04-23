@@ -1,4 +1,4 @@
-const { fetch } = require("../dist/graphqlx");
+const { fetch } = require("../dist/graphqlx.node");
 
 let query = `{
   getLocation(ip: "189.59.228.170") {
