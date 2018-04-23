@@ -7,9 +7,24 @@ let clientConfig = {
   mode: "production",
   output: {
     path: path.resolve(__dirname, "../dist"),
-    filename: "graphqlx.web.js",
+    filename: "graphqlx.js",
     library: "graphqlx",
     libraryTarget: "umd"
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env'],
+            plugins: ["transform-object-rest-spread"]
+          }
+        }
+      }
+    ]
   },
   plugins: [
     new UglifyJsPlugin({
@@ -26,14 +41,29 @@ let clientConfig = {
 
 
 let serverConfig = {
-  target: 'node',
+  target: "node",
   entry: path.resolve(__dirname, "../src/main.js"),
   mode: "production",
   output: {
     path: path.resolve(__dirname, "../dist"),
-    filename: "graphqlx.js",
+    filename: "graphqlx.node.js",
     library: "graphqlx",
     libraryTarget: "umd"
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env'],
+            plugins: ["transform-object-rest-spread"]
+          }
+        }
+      }
+    ]
   },
   plugins: [
     new UglifyJsPlugin({

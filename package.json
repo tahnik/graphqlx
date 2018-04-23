@@ -50,15 +50,19 @@
   },
   "homepage": "https://github.com/tahnik/graphqlx#readme",
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
     "node-fetch": "^2.1.2"
   },
   "devDependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "bs-platform": "^2.2.2",
     "jest": "^22.4.3",
     "jest-extended": "^0.7.1",
     "jest-html-reporter": "^2.3.0",
     "uglifyjs-webpack-plugin": "^1.2.5",
-    "webpack": "^4.5.0",
+    "webpack": "^4.6.0",
     "webpack-cli": "^2.0.14"
   },
   "jest": {
