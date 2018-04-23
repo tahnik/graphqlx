@@ -5,6 +5,7 @@ let clientConfig = {
   target: 'web',
   entry: path.resolve(__dirname, "../src/main.js"),
   mode: "production",
+  devtool: "source-map",
   output: {
     path: path.resolve(__dirname, "../dist"),
     filename: "graphqlx.js",
@@ -44,6 +45,7 @@ let serverConfig = {
   target: "node",
   entry: path.resolve(__dirname, "../src/main.js"),
   mode: "production",
+  devtool: "source-map",
   output: {
     path: path.resolve(__dirname, "../dist"),
     filename: "graphqlx.node.js",
