@@ -75,6 +75,10 @@
       margin: 0 0 0.5rem 0;
       overflow-y: hidden;
       cursor: pointer;
+      transition: all 0.2s;
+    }
+    .thumb.active {
+      background-color: cornflowerblue;
     }
     #q_take_input {
       border-radius: 3px;
@@ -107,6 +111,7 @@
           placeholder="https://api.graphloc.com/graphql"
           type="text"
           class="validate"
+          v-model="endpoint"
         >
         <label for="endpoint">API Endpoint</label>
       </div>
@@ -115,6 +120,7 @@
           placeholder="Default: None"
           type="text"
           class="validate"
+          v-model="auth_header"
         >
         <label for="auth_header">Authorization Header</label>
       </div>
@@ -145,6 +151,7 @@
           <div class="thumbs">
             <pre
               class="thumb"
+              v-bind:class="{ active : index === currentInput }"
               v-for="(query, index) in queries"
               @click="openInput(index)">{{ query }}</pre>
           </div>
@@ -162,11 +169,19 @@
       <div class="controls">
         <button
           class="btn waves-effect waves-light"
-          v-on:click="addQuery"
+          v-on:click="runQuery"
           name="action"
         >
           Run Query
           <i class="material-icons right">play_circle_filled</i>
+        </button>
+        <button
+          class="btn waves-effect waves-light"
+          v-on:click="addQuery"
+          name="action"
+        >
+          Run All Queries
+          <i class="material-icons right">fast_forward</i>
         </button>
       </div>
     </div>
@@ -180,8 +195,24 @@
     var app = new Vue({
       el: '#app',
       data: {
-        queries: [],
-        currentInput: 0
+        queries: [`{
+  getLocation(ip: "189.59.228.170") {
+    country {
+      names {
+        en
+      }
+      geoname_id
+      iso_code
+    }
+    location {
+      latitude
+      longitude
+    }
+  }
+}`],
+        currentInput: 0,
+        endpoint: "https://api.graphloc.com/graphql",
+        auth_header: ""
       },
       methods: {
         addQuery: function() {
@@ -196,6 +227,12 @@
           if (this.queries.length != 0) {
             this.currentInput = this.queries.length - 1;
           }
+        },
+        runQuery: function() {
+          graphqlx.fetch(this.endpoint, this.queries[this.currentInput], this.header)
+          .then((res) => {
+            console.log(res);
+          })
         }
       }
     })

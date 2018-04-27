@@ -31,11 +31,11 @@ let clientConfig = {
     new UglifyJsPlugin({
       sourceMap: true,
       parallel: true,
-      uglifyOptions: {
-        compress: {
-          drop_console: true,
-        }
-      }
+      // uglifyOptions: {
+      //   compress: {
+      //     drop_console: true,
+      //   }
+      // }
     })
   ]
 };
@@ -71,11 +71,11 @@ let serverConfig = {
     new UglifyJsPlugin({
       sourceMap: true,
       parallel: true,
-      uglifyOptions: {
-        compress: {
-          drop_console: true,
-        }
-      }
+      // uglifyOptions: {
+      //   compress: {
+      //     drop_console: true,
+      //   }
+      // }
     })
   ]
 };

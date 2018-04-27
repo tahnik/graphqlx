@@ -7,3 +7,4 @@ lib/js
 lib/bs
 test.js
 dist
+test-report.html
