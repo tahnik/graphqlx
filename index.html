@@ -11,7 +11,8 @@
 
   <style>
     ::-webkit-scrollbar {
-      width: 10px;
+      width: 5px;
+      height: 5px;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -22,7 +23,6 @@
     .vline {
       height: 100%;
       width: 2px;
-      /* background-color: gray; */
     }
 
     ::-webkit-scrollbar-track {
@@ -51,10 +51,19 @@
     .input-field {
       margin-bottom: 1.5rem;
     }
+    .control_opti {
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+    .control_opti > label {
+      margin: 0 2rem;
+    }
     .queries {
       display: flex;
       margin: 1rem 0 1rem 0;
       flex: 1;
+      flex-direction: column-reverse;
     }
     .queries_cont {
       flex: 1;
@@ -69,23 +78,43 @@
       margin-right: 0.5rem;
     }
     .thumbs {
-      flex: 1;
-      padding: 0 0.3rem 0.3rem 0.3rem;
-      overflow-y: auto;
+      padding: 0;
+      overflow: scroll;
+      display: flex;
+      align-items: center;
+      flex: 0.8;
     }
     .thumb {
+      user-select: none;
       padding: 0.5rem;
       border-radius: 3px;
       border: 1px solid grey; 
       font-size: 0.3rem;
-      max-height: 150px;
-      margin: 0 0 0.5rem 0;
-      overflow-y: hidden;
+      height: 80px;
+      width: 80px;
+      min-width: 80px;
+      min-height: 80px;
+      margin: 0 0.5rem 0 0;
+      overflow: hidden;
       cursor: pointer;
       transition: all 0.2s;
+      background-color: #f2f2f2;
+    }
+    .thumb > pre {
+      margin: 0;
+      filter: blur(0.8px);
+    }
+    .thumb.active > pre {
+      margin: 0;
+      filter: blur(0);
     }
     .thumb.active {
-      background-color: cornflowerblue;
+      min-width: 100px;
+      min-height: 100px;
+      width: 100px;
+      height: 100px;
+      transform-origin: top;
+      background-color: #FFFFFF;
     }
     textarea {
       resize: none;
@@ -99,7 +128,7 @@
     .query_in {
       flex: 3;
       display: flex;
-      margin: 0 0 0 0.5rem;
+      margin: 0 0 1rem 0;
     }
     .take_input {
       flex: 1;
@@ -154,6 +183,22 @@
         >
         <label for="auth_header">Authorization Header</label>
       </div>
+      <div class="control_opti">
+        <label>
+          <input type="checkbox"
+            class="filled-in"
+            v-model="cache"
+          />
+          <span>{{ cache ? "Disable" : "Enable"}} Caching</span>
+        </label>
+        <label>
+          <input type="checkbox"
+            class="filled-in"
+            v-model="batch"
+          />
+          <span>{{ batch ? "Disable" : "Enable"}} Batching</span>
+        </label>
+      </div>
       <div class="queries_cont">
         <div class="add_remove">
           <button
@@ -178,14 +223,17 @@
           </button>
         </div>
         <div class="queries">
-          <div class="thumbs">
-            <pre
+          <div class="thumbs" id="thumbs">
+            <div
               class="thumb"
               v-bind:class="{ active : index === currentInput }"
               v-for="(query, index) in queries"
-              @click="openInput(index)">{{ query }}</pre>
+              @click="openInput(index)"
+            >
+              <pre>{{ query }}</pre>
+            </div>
           </div>
-          <div class="query_in">
+          <div class="query_in" id="query_in">
             <div v-if="queries.length > 0" class="take_input">
               <textarea
                 id="q_take_input"
@@ -247,14 +295,47 @@
         currentInput: 0,
         endpoint: "https://api.graphloc.com/graphql",
         auth_header: "",
-        logs: ""
+        logs: "",
+        batch: false,
+        cache: false
       },
       mounted: function() {
-        graphqlx.enableCache(true);
+        let query_in = document.getElementById("query_in");
+        let thumbs =  document.getElementById("thumbs");
+        let style = window.getComputedStyle(query_in);
+        thumbs.style.maxWidth = style.width;
+      },
+      updated: function() {
+        let query_in = document.getElementById("query_in");
+        let thumbs =  document.getElementById("thumbs");
+        let style = window.getComputedStyle(query_in);
+        thumbs.style.maxWidth = style.width;
+      },
+      watch: {
+        cache: function() {
+          graphqlx.enableCache(this.cache);
+        },
+        batch: function() {
+          graphqlx.enableBatch(this.batch);
+        }
       },
       methods: {
         addQuery: function() {
-          this.queries.push("# Remove this and Add a query here");
+          this.queries.push(`{
+  getLocation(ip: "189.59.228.170") {
+    country {
+      names {
+        en
+      }
+      geoname_id
+      iso_code
+    }
+    location {
+      latitude
+      longitude
+    }
+  }
+}`);
           this.currentInput = this.queries.length - 1;
         },
         openInput: function(index) {
