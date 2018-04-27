@@ -355,14 +355,14 @@
         },
         runQueries: function() {
           this.logs = "";
-          graphqlx.enableBatch(true);
-          this.queries.forEach(element => {
+          this.queries.forEach((element, index) => {
+            console.time("query" + index);
             graphqlx.fetch(this.endpoint, element, this.header)
             .then((res) => {
               this.logs += JSON.stringify(res, null, 4) + "\n";
+              console.timeEnd("query" + index);
             })
           });
-          graphqlx.enableBatch(false);
         }
       }
     })
