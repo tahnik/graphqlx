@@ -20,11 +20,6 @@
       border-radius: 20px;
     }
 
-    .vline {
-      height: 100%;
-      width: 2px;
-    }
-
     ::-webkit-scrollbar-track {
       background: transparent;
       border-radius: 20px;
@@ -41,9 +36,6 @@
       padding: 0 1rem 1rem 1rem;
       display: flex;
       flex-direction: column;
-    }
-    .logs {
-      flex: 1;
     }
     .endpoint {
       display: flex;
@@ -139,18 +131,25 @@
       background-color: grey;
       margin: 0 0 1rem 0;
     }
-    .logs {
-      margin: 0 1rem 0 0.5rem;
+    .logs_cont {
+      padding: 0 1rem 1rem 1rem;
       display: flex;
       flex-direction: column;
+      flex: 1;
     }
-    .logs > pre {
+    .logs {
       border-radius: 5px;
       background-color: lightgray;
       padding: 0.5rem;
       flex: 1;
+      display: flex;
       margin-top: 0;
       font-family: 'Fira Sans', sans-serif;
+    }
+    .logs > pre {
+      overflow-y: auto; 
+      flex: 1;
+      margin: 0;
     }
     h1 {
       font-size: 2rem;
@@ -264,9 +263,11 @@
       </div>
     </div>
     <div class="vline"></div>
-    <div class="logs">
+    <div class="logs_cont">
       <h1>Responses</h1>
-      <pre>{{ logs }}</pre>
+      <div class="logs">
+        <pre>{{ logs }}</pre>
+      </div>
     </div>
   </div>
 
@@ -348,8 +349,10 @@
           }
         },
         runQuery: function() {
+          console.time("Single Query");
           graphqlx.fetch(this.endpoint, this.queries[this.currentInput], this.header)
           .then((res) => {
+            console.timeEnd("Single Query");
             this.logs = JSON.stringify(res, null, 4);
           })
         },
@@ -359,8 +362,8 @@
             console.time("query" + index);
             graphqlx.fetch(this.endpoint, element, this.header)
             .then((res) => {
-              this.logs += JSON.stringify(res, null, 4) + "\n";
               console.timeEnd("query" + index);
+              this.logs += JSON.stringify(res, null, 4) + "\n";
             })
           });
         }
