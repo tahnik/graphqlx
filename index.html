@@ -5,6 +5,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
   <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web:300,400" rel="stylesheet">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -16,6 +17,12 @@
     ::-webkit-scrollbar-thumb {
       background: rgb(64, 65, 90);
       border-radius: 20px;
+    }
+
+    .vline {
+      height: 100%;
+      width: 2px;
+      /* background-color: gray; */
     }
 
     ::-webkit-scrollbar-track {
@@ -30,8 +37,8 @@
       overflow-y: hidden; 
     }
     .tester {
-      flex: 1.3;
-      padding: 1rem;
+      flex: 1;
+      padding: 0 1rem 1rem 1rem;
       display: flex;
       flex-direction: column;
     }
@@ -80,6 +87,9 @@
     .thumb.active {
       background-color: cornflowerblue;
     }
+    textarea {
+      resize: none;
+    }
     #q_take_input {
       border-radius: 3px;
       padding: 0.5rem;
@@ -100,12 +110,32 @@
       background-color: grey;
       margin: 0 0 1rem 0;
     }
+    .logs {
+      margin: 0 1rem 0 0.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .logs > pre {
+      border-radius: 5px;
+      background-color: lightgray;
+      padding: 0.5rem;
+      flex: 1;
+      margin-top: 0;
+      font-family: 'Fira Sans', sans-serif;
+    }
+    h1 {
+      font-size: 2rem;
+      margin: 1rem 0;
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 300;
+    }
   </style>
 </head>
 
 <body>
   <div class="main" id="app">
     <div class="tester">
+      <h1>Requests</h1>
       <div class="input-field endpoint">
         <input
           placeholder="https://api.graphloc.com/graphql"
@@ -177,7 +207,7 @@
         </button>
         <button
           class="btn waves-effect waves-light"
-          v-on:click="addQuery"
+          v-on:click="runQueries"
           name="action"
         >
           Run All Queries
@@ -185,7 +215,11 @@
         </button>
       </div>
     </div>
-    <div class="logs"></div>
+    <div class="vline"></div>
+    <div class="logs">
+      <h1>Responses</h1>
+      <pre>{{ logs }}</pre>
+    </div>
   </div>
 
   <script type="text/javascript" src="js/materialize.min.js"></script>
@@ -212,7 +246,11 @@
 }`],
         currentInput: 0,
         endpoint: "https://api.graphloc.com/graphql",
-        auth_header: ""
+        auth_header: "",
+        logs: ""
+      },
+      mounted: function() {
+        graphqlx.enableCache(true);
       },
       methods: {
         addQuery: function() {
@@ -231,8 +269,19 @@
         runQuery: function() {
           graphqlx.fetch(this.endpoint, this.queries[this.currentInput], this.header)
           .then((res) => {
-            console.log(res);
+            this.logs = JSON.stringify(res, null, 4);
           })
+        },
+        runQueries: function() {
+          this.logs = "";
+          graphqlx.enableBatch(true);
+          this.queries.forEach(element => {
+            graphqlx.fetch(this.endpoint, element, this.header)
+            .then((res) => {
+              this.logs += JSON.stringify(res, null, 4) + "\n";
+            })
+          });
+          graphqlx.enableBatch(false);
         }
       }
     })
