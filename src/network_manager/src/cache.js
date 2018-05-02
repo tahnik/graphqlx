@@ -48,7 +48,7 @@ const clear = () => {
   let i = 0;
   Object.keys(cache).map(key => {
     const timeElapsed = (Date.now() - cache[key].added_on)/1000;
-    if (timeElapsed > 3) {
+    if (timeElapsed > 6) {
       delete cache[key];
       i++;
     }
