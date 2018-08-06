@@ -62,6 +62,7 @@ rule read =
   | '['         { LEFT_BRACK }
   | ']'         { RIGHT_BRACK }
   | ':'         { COLON }
+  | '!'         { BANG }
   | ','         { read lexbuf }
   | _           { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
   | eof         { EOF }
